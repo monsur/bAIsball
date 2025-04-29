@@ -1,5 +1,5 @@
 """
-Content downloader module for bAIsball
+Content downloader module for plAI-ball
 """
 
 from .downloader import ContentDownloader

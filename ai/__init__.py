@@ -1,5 +1,5 @@
 """
-AI summarizer module for bAIsball
+AI summarizer module for plAI-ball
 """
 
 from .summarizer import GameSummarizer

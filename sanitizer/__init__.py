@@ -1,5 +1,5 @@
 """
-Content sanitizer module for bAIsball
+Content sanitizer module for plAI-ball
 """
 
 from .sanitizer import ContentSanitizer
