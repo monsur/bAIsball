@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import google.generativeai as genai
 from dotenv import load_dotenv
 import time
+from urllib.parse import urljoin
 
 # Load environment variables
 load_dotenv()
@@ -13,6 +14,31 @@ class GameHTMLProcessor:
         # Create directories if they don't exist
         self.html_dir = 'html_files'
         os.makedirs(self.html_dir, exist_ok=True)
+
+    def get_box_score_urls(self, scoreboard_url):
+        """Extract box score URLs from the MLB scoreboard page."""
+        try:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+            }
+            response = requests.get(scoreboard_url, headers=headers)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.text, 'html.parser')
+            box_score_urls = []
+            
+            # Find all links that contain "box score" in their text
+            for link in soup.find_all('a', string=lambda text: text and 'box score' in text.lower()):
+                href = link.get('href')
+                if href:
+                    # Convert relative URLs to absolute URLs
+                    absolute_url = urljoin(scoreboard_url, href)
+                    box_score_urls.append(absolute_url)
+            
+            return box_score_urls
+        except requests.RequestException as e:
+            print(f"Error fetching scoreboard page: {e}")
+            return []
 
     def download_html(self, url):
         """Download HTML content from a URL."""
@@ -177,20 +203,28 @@ def main():
     html_processor = GameHTMLProcessor()
     summarizer = GameSummarizer()
     
-    # Example URLs (replace with actual baseball game URLs)
-    urls = [
-        "https://www.espn.com/mlb/recap/_/gameId/401695316",
-        "https://www.espn.com/mlb/boxscore/_/gameId/401695317"
-    ]
+    # Configuration
+    api_delay_seconds = 20  # Delay between API calls to respect rate limits
+    filter_html = False  # Set to True to enable filtering
+    
+    # Get box score URLs from the scoreboard
+    scoreboard_url = "https://www.espn.com/mlb/scoreboard"
+    box_score_urls = html_processor.get_box_score_urls(scoreboard_url)
+    
+    if not box_score_urls:
+        print("No box score URLs found. Exiting.")
+        return
+    
+    print(f"Found {len(box_score_urls)} box score URLs to process")
+    print(f"Waiting {api_delay_seconds} seconds between API calls")
     
     # Lists to store summaries
     html_summaries = []
     text_summaries = []
     
-    # Flag to control HTML filtering
-    filter_html = False  # Set to True to enable filtering
-    
-    for url in urls:
+    for url in box_score_urls:
+        print(f"Processing: {url}")
+        
         # Download HTML
         html_content = html_processor.download_html(url)
         if not html_content:
@@ -212,7 +246,10 @@ def main():
         if text_summary:
             text_summaries.append(text_summary)
         
-        time.sleep(2)  # Add delay between requests
+        # Wait before processing next URL
+        if url != box_score_urls[-1]:  # Don't wait after the last URL
+            print(f"Waiting {api_delay_seconds} seconds before next API call...")
+            time.sleep(api_delay_seconds)
     
     # Save combined summaries
     if html_summaries:
