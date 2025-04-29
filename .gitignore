@@ -32,7 +32,9 @@ ENV/
 
 # Environment variables
 .env
+.DS_Store
 
 # Project specific
 html_files/
 summaries/ 
+test_output/
