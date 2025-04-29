@@ -106,9 +106,9 @@ class GameSummarizer:
             For each input file, follow these steps:
             1. Parse the HTML and extract relevant details about the baseball game.
             2. Don't include the filename in the output.
-            2 . First line of output: Concisely show the teams that played and the score of the game in the format: away team (away team score) vs home team (home team score)
-            3. Second line of output: Show a concise date and time and timezone of the game (no heading needed, just the date/time)
-            4. Rest of output: Any highlights or strong performances from the game. There should be 1-5 highlights per-game, provided in bullet format. When appropriate ,include the names of players who were part of the highlight. Order the bullets in inning order, with the earlier innings first.
+            3. First line of output: Concisely show the teams that played and the score of the game in the format: away team (away team score) vs home team (home team score)
+            4. Second line of output: Show a concise date and time and timezone of the game (no heading needed, just the date/time)
+            5. Rest of output: Any highlights or strong performances from the game. There should be 1-5 highlights per-game, provided in bullet format. When appropriate ,include the names of players who were part of the highlight. Order the bullets in inning order, with the earlier innings first.
 
             If there's a file named "standings.txt", these are the league standings for each time. Use this data to provide context for each game in the summary, but only if it's appropriate. Also if there's a standings.txt file, show each team's record at the beginning, after the date."""
             
