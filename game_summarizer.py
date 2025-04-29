@@ -5,6 +5,8 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import time
 from urllib.parse import urljoin
+import argparse
+from datetime import datetime, timedelta
 
 # Load environment variables
 load_dotenv()
@@ -199,16 +201,36 @@ class GameSummarizer:
             return None
 
 def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Generate baseball game summaries from ESPN box scores')
+    parser.add_argument('--date', type=str, help='Date in YYYYMMDD format (default: yesterday)', 
+                       default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
+    parser.add_argument('--filter', action='store_true', help='Enable HTML filtering')
+    parser.add_argument('--delay', type=int, default=60, 
+                       help='Delay in seconds between API calls (default: 60)')
+    args = parser.parse_args()
+
+    # Validate date format
+    try:
+        datetime.strptime(args.date, '%Y%m%d')
+    except ValueError:
+        print("Error: Date must be in YYYYMMDD format")
+        return
+
     # Example usage
     html_processor = GameHTMLProcessor()
     summarizer = GameSummarizer()
     
     # Configuration
-    api_delay_seconds = 20  # Delay between API calls to respect rate limits
-    filter_html = False  # Set to True to enable filtering
+    api_delay_seconds = args.delay
+    filter_html = args.filter
+    
+    # Construct scoreboard URL with date
+    scoreboard_url = f"https://www.espn.com/mlb/scoreboard/_/date/{args.date}"
+    print(f"Fetching box scores for date: {args.date}")
+    print(f"Scoreboard URL: {scoreboard_url}")
     
     # Get box score URLs from the scoreboard
-    scoreboard_url = "https://www.espn.com/mlb/scoreboard"
     box_score_urls = html_processor.get_box_score_urls(scoreboard_url)
     
     if not box_score_urls:
