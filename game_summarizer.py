@@ -123,81 +123,53 @@ class GameSummarizer:
         self.summaries_dir = 'summaries'
         os.makedirs(self.summaries_dir, exist_ok=True)
 
-    def generate_summary(self, html_content, output_format='text'):
-        """Generate a summary using Gemini AI with specified output format."""
+    def generate_summary(self, html_contents):
+        """Generate a summary using Gemini AI."""
         try:
             # System instructions for Gemini
-            system_instructions = """You are creating a summary of baseball games for a newsletter. 
+            system_instructions = """You are kAIrl, a baseball podcaster. Your voice and tone is similar to the announcer Karl Ravech.
 
-            The input is provided as HTML from the espn.com website. 
+Input Format: 
+Input is one or more HTML files from the espn.com website. Each HTML file represents the results of one game. There may also be an optional file named "standings.html" that includes the stands of each team in the league.
 
-            For each input file, follow these steps:
-            1. Parse the HTML and extract relevant details about the baseball game.
-            2. Don't include the filename in the output.
-            3. First line of output: Concisely show the teams that played and the score of the game in the format: away team (away team score) vs home team (home team score)
-            4. Second line of output: Show a concise date and time and timezone of the game (no heading needed, just the date/time)
-            5. Rest of output: Any highlights or strong performances from the game. There should be 1-5 highlights per-game, provided in bullet format. When appropriate ,include the names of players who were part of the highlight. Order the bullets in inning order, with the earlier innings first.
+Output Format:
+The output is a text file with the transcript for the podcast. The podcast should begin with an introduction that includes the date that the games were played (all the games should be from the same date). Next the podcast should highlight 2-3 of the most key moments from all the days games.
 
-            If there's a file named "standings.txt", these are the league standings for each time. Use this data to provide context for each game in the summary, but only if it's appropriate. Also if there's a standings.txt file, show each team's record at the beginning, after the date."""
-            
-            # Add format-specific instructions
-            if output_format == 'html':
-                system_instructions += "\n\nFormat the output as HTML with appropriate tags. Use <h2> for the game title, <p> for paragraphs, and <ul>/<li> for bullet points. Do not include <html>, <head>, or <body> tags."
-            elif output_format == 'text':
-                system_instructions += "\n\nFormat the output as plain text with clear line breaks and bullet points using '-' characters."
-            
-            prompt = f"""Please provide a concise summary of this baseball game content. 
-            Focus on key plays, scores, and important moments. 
-            Content: {html_content}"""
+After that, the podcast should continue through each game. It should highlight who was playing, the score, and key highlights from the game.
+
+The entire podcast runtime should be kept short, about 15-20minutes. Remember to keep the content fun and engaging!"""
             
             # Create a chat session with system instructions
             chat = self.model.start_chat(history=[])
+            
+            # Prepare the prompt with all HTML contents
+            prompt = "Here are the game summaries for today's baseball games:\n\n"
+            for i, content in enumerate(html_contents, 1):
+                prompt += f"Game {i}:\n{content}\n\n"
+            
+            # Send a single request with all content
             response = chat.send_message(system_instructions + "\n\n" + prompt)
             return response.text
         except Exception as e:
             print(f"Error generating summary: {e}")
             return None
 
-    def save_combined_summaries(self, summaries, output_format='text'):
-        """Save all summaries to a single file with specified format."""
+    def save_summary(self, summary):
+        """Save the summary to a text file."""
         try:
-            # Determine file extension and wrapper based on format
-            if output_format == 'html':
-                extension = '.html'
-                wrapper_start = """<!DOCTYPE html>
-<html>
-<head>
-    <title>Baseball Game Summaries</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .game { margin-bottom: 40px; border-bottom: 1px solid #ccc; padding-bottom: 20px; }
-        h2 { color: #333; }
-        ul { margin-left: 20px; }
-    </style>
-</head>
-<body>
-"""
-                wrapper_end = "</body>\n</html>"
-                separator = "\n<div class='game'>\n"
-            else:
-                extension = '.txt'
-                wrapper_start = "BASEBALL GAME SUMMARIES\n" + "=" * 50 + "\n\n"
-                wrapper_end = ""
-                separator = "\n" + "-" * 50 + "\n\n"
-            
-            # Create the combined content
-            combined_content = wrapper_start + separator.join(summaries) + wrapper_end
+            # Add header to the content
+            content = "BASEBALL GAME SUMMARIES\n" + "=" * 50 + "\n\n" + summary
             
             # Save to file
-            filename = f"all_summaries{extension}"
+            filename = "all_summaries.txt"
             filepath = os.path.join(self.summaries_dir, filename)
             
             with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(combined_content)
+                f.write(content)
             
             return filepath
         except Exception as e:
-            print(f"Error saving combined summaries: {e}")
+            print(f"Error saving summary: {e}")
             return None
 
 def main():
@@ -238,11 +210,9 @@ def main():
         return
     
     print(f"Found {len(box_score_urls)} box score URLs to process")
-    print(f"Waiting {api_delay_seconds} seconds between API calls")
     
-    # Lists to store summaries
-    html_summaries = []
-    text_summaries = []
+    # Collect all HTML contents
+    html_contents = []
     
     for url in box_score_urls:
         print(f"Processing: {url}")
@@ -258,29 +228,25 @@ def main():
             if not html_content:
                 continue
         
-        # Generate HTML summary
-        html_summary = summarizer.generate_summary(html_content, output_format='html')
-        if html_summary:
-            html_summaries.append(html_summary)
-        
-        # Generate text summary
-        text_summary = summarizer.generate_summary(html_content, output_format='text')
-        if text_summary:
-            text_summaries.append(text_summary)
+        html_contents.append(html_content)
         
         # Wait before processing next URL
         if url != box_score_urls[-1]:  # Don't wait after the last URL
-            print(f"Waiting {api_delay_seconds} seconds before next API call...")
+            print(f"Waiting {api_delay_seconds} seconds before next request...")
             time.sleep(api_delay_seconds)
     
-    # Save combined summaries
-    if html_summaries:
-        html_path = summarizer.save_combined_summaries(html_summaries, output_format='html')
-        print(f"Combined HTML summaries saved to: {html_path}")
+    if not html_contents:
+        print("No valid HTML content found. Exiting.")
+        return
     
-    if text_summaries:
-        text_path = summarizer.save_combined_summaries(text_summaries, output_format='text')
-        print(f"Combined text summaries saved to: {text_path}")
+    # Generate summary in one API call
+    print("Generating summary...")
+    summary = summarizer.generate_summary(html_contents)
+    
+    # Save summary
+    if summary:
+        filepath = summarizer.save_summary(summary)
+        print(f"Summary saved to: {filepath}")
 
 if __name__ == "__main__":
     main() 
