@@ -15,8 +15,8 @@ def main():
                        help='Directory for sanitized HTML files (default: sanitized_html)')
     parser.add_argument('--output-dir', type=str, default='summaries',
                        help='Directory for summary files (default: summaries)')
-    parser.add_argument('--sanitize', action='store_true',
-                       help='Enable HTML filtering')
+    parser.add_argument('--filter', action='store_true',
+                       help='Remove script tags from HTML files')
     parser.add_argument('--delay', type=int, default=60,
                        help='Delay in seconds between downloads (default: 60)')
     args = parser.parse_args()
@@ -37,10 +37,10 @@ def main():
         if url != box_score_urls[-1]:
             time.sleep(args.delay)
 
-    # Step 2: Sanitize content
-    print("\n=== Sanitizing Content ===")
+    # Step 2: Process content
+    print("\n=== Processing Content ===")
     sanitizer = ContentSanitizer(args.raw_dir, args.sanitized_dir)
-    sanitizer.process_files(args.sanitize)
+    sanitizer.process_files(args.filter)
 
     # Step 3: Generate summary
     print("\n=== Generating Summary ===")

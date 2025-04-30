@@ -9,56 +9,23 @@ class ContentSanitizer:
         os.makedirs(self.output_dir, exist_ok=True)
 
     def filter_html(self, html_content):
-        """Filter HTML to keep only specified nodes."""
+        """Remove script, style, and link tags from HTML content."""
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
-            new_soup = BeautifulSoup('', 'html.parser')
             
-            # Keep title node
-            title = soup.find('title')
-            if title:
-                new_soup.append(title)
+            # Remove all script tags
+            for script in soup.find_all('script'):
+                script.decompose()
             
-            # Keep Gamestrip nodes
-            gamestrip_nodes = soup.find_all(lambda tag: 
-                (tag.get('id') and 'Gamestrip' in tag['id']) or
-                (tag.get('class') and any('Gamestrip' in c for c in tag['class']))
-            )
-            for node in gamestrip_nodes:
-                new_soup.append(node)
+            # Remove all style tags
+            for style in soup.find_all('style'):
+                style.decompose()
             
-            # Keep Athletes_Container nodes
-            athletes_nodes = soup.find_all(lambda tag: 
-                (tag.get('id') and 'Athletes_Container' in tag['id']) or
-                (tag.get('class') and 'Athletes_Container' in tag['class'])
-            )
-            for node in athletes_nodes:
-                new_soup.append(node)
+            # Remove all link tags
+            for link in soup.find_all('link'):
+                link.decompose()
             
-            # Keep GameInfo nodes
-            gameinfo_nodes = soup.find_all(lambda tag: 
-                (tag.get('id') and 'GameInfo' in tag['id']) or
-                (tag.get('class') and 'GameInfo' in tag['class'])
-            )
-            for node in gameinfo_nodes:
-                new_soup.append(node)
-            
-            # Keep ScoringSummary nodes
-            scoring_nodes = soup.find_all(lambda tag: 
-                (tag.get('id') and 'ScoringSummary' in tag['id']) or
-                (tag.get('class') and any('ScoringSummary' in c for c in tag['class']))
-            )
-            for node in scoring_nodes:
-                new_soup.append(node)
-            
-            # Keep table in Card section
-            card_sections = soup.find_all('section', class_='Card')
-            for section in card_sections:
-                table = section.find('table')
-                if table:
-                    new_soup.append(table)
-            
-            return str(new_soup)
+            return str(soup)
         except Exception as e:
             print(f"Error filtering HTML: {e}")
             return None
@@ -91,17 +58,17 @@ class ContentSanitizer:
                 print(f"Error processing {filename}: {e}")
 
 def main():
-    parser = argparse.ArgumentParser(description='Sanitize baseball game HTML content')
+    parser = argparse.ArgumentParser(description='Process baseball game HTML content')
     parser.add_argument('--input-dir', type=str, default='raw_html',
                        help='Directory containing input HTML files (default: raw_html)')
     parser.add_argument('--output-dir', type=str, default='sanitized_html',
-                       help='Directory to save sanitized files (default: sanitized_html)')
-    parser.add_argument('--sanitize', action='store_true',
-                       help='Enable HTML filtering (files will be filtered by default)')
+                       help='Directory to save processed files (default: sanitized_html)')
+    parser.add_argument('--filter', action='store_true',
+                       help='Remove script, style, and link tags from HTML files')
     args = parser.parse_args()
 
     sanitizer = ContentSanitizer(args.input_dir, args.output_dir)
-    sanitizer.process_files(args.sanitize)
+    sanitizer.process_files(args.filter)
 
 if __name__ == "__main__":
     main() 
