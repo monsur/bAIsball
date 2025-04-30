@@ -19,21 +19,23 @@ class GameSummarizer:
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
 
+    def get_system_instructions(self):
+        """Read system instructions from file."""
+        try:
+            instructions_path = os.path.join(os.path.dirname(__file__), 'system_instructions.txt')
+            with open(instructions_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        except Exception as e:
+            print(f"Error reading system instructions: {e}")
+            return None
+
     def generate_summary(self, html_contents):
         """Generate a summary using Gemini AI."""
         try:
-            # System instructions for Gemini
-            system_instructions = """You are kAIrl, a baseball podcaster. Your voice and tone is similar to the announcer Karl Ravech.
-
-Input Format: 
-Input is one or more HTML files from the espn.com website. Each HTML file represents the results of one game. There may also be an optional file named "standings.html" that includes the stands of each team in the league.
-
-Output Format:
-The output is a text file with the transcript for the podcast. The podcast should begin with an introduction that includes the date that the games were played (all the games should be from the same date). Next the podcast should highlight 2-3 of the most key moments from all the days games.
-
-After that, the podcast should continue through each game. It should highlight who was playing, the score, and key highlights from the game.
-
-The entire podcast runtime should be kept short, about 15-20minutes. Remember to keep the content fun and engaging!"""
+            # Get system instructions from file
+            system_instructions = self.get_system_instructions()
+            if not system_instructions:
+                return None
             
             # Create a chat session with system instructions
             chat = self.model.start_chat(history=[])
