@@ -18,8 +18,8 @@ def main():
                        help='Directory for summary files (default: output/summaries)')
     parser.add_argument('--filter', action='store_true',
                        help='Remove script, style, and link tags from HTML files')
-    parser.add_argument('--delay', type=int, default=60,
-                       help='Delay in seconds between downloads (default: 60)')
+    parser.add_argument('--delay', type=int, default=2,
+                       help='Delay in seconds between downloads (default: 2)')
     args = parser.parse_args()
 
     # Create output directories if they don't exist
