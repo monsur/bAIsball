@@ -58,6 +58,32 @@ class ContentDownloader:
             print(f"Error downloading {url}: {e}")
             return None
 
+    def retrieve_scores(self, scoreboard_url, delay=2):
+        """Process a scoreboard URL by downloading all box scores."""
+        print(f"Fetching box scores from: {scoreboard_url}")
+        
+        # Get box score URLs
+        box_score_urls = self.get_box_score_urls(scoreboard_url)
+        
+        if not box_score_urls:
+            print("No box score URLs found. Exiting.")
+            return []
+        
+        print(f"Found {len(box_score_urls)} box score URLs to process")
+        downloaded_files = []
+        
+        # Download each box score
+        for url in box_score_urls:
+            print(f"Downloading: {url}")
+            filepath = self.download_content(url)
+            if filepath:
+                print(f"Saved to: {filepath}")
+                downloaded_files.append(filepath)
+            if url != box_score_urls[-1]:
+                time.sleep(delay)
+        
+        return downloaded_files
+
 def main():
     parser = argparse.ArgumentParser(description='Download baseball game box scores from ESPN')
     parser.add_argument('--date', type=str, help='Date in YYYYMMDD format (default: yesterday)', 
@@ -79,26 +105,7 @@ def main():
     
     # Construct scoreboard URL with date
     scoreboard_url = f"https://www.espn.com/mlb/scoreboard/_/date/{args.date}"
-    print(f"Fetching box scores for date: {args.date}")
-    print(f"Scoreboard URL: {scoreboard_url}")
-    
-    # Get box score URLs
-    box_score_urls = downloader.get_box_score_urls(scoreboard_url)
-    
-    if not box_score_urls:
-        print("No box score URLs found. Exiting.")
-        return
-    
-    print(f"Found {len(box_score_urls)} box score URLs to process")
-    
-    # Download each box score
-    for url in box_score_urls:
-        print(f"Downloading: {url}")
-        filepath = downloader.download_content(url)
-        if filepath:
-            print(f"Saved to: {filepath}")
-        if url != box_score_urls[-1]:
-            time.sleep(args.delay)
+    downloader.retrieve_scores(scoreboard_url, args.delay)
 
 if __name__ == "__main__":
     main() 
