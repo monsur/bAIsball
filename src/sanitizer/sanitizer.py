@@ -32,6 +32,22 @@ class ContentSanitizer:
                 for div in soup.find_all('div', class_='HeaderScoreboardWrapper'):
                     div.decompose()
 
+                # Remove PageLayout page-container cf page-footer-container div
+                for div in soup.find_all('div', class_='PageLayout page-container cf page-footer-container'):
+                    div.decompose()
+
+                # Remove fittOverlayContainer div
+                for div in soup.find_all('div', id='fittOverlayContainer'):
+                    div.decompose()
+
+                # Remove fittBGContainer div
+                for div in soup.find_all('div', id='fittBGContainer'):
+                    div.decompose()
+
+                # Remove lightboxContainer div
+                for div in soup.find_all('div', id='lightboxContainer'):
+                    div.decompose()
+
                 # Remove Site Header Wrapper div
                 for div in soup.find_all('header', class_='db Site__Header__Wrapper sticky'):
                     div.decompose()
