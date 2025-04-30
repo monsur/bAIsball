@@ -33,7 +33,7 @@ The output is a text file with the transcript for the podcast. The podcast shoul
 
 After that, the podcast should continue through each game. It should highlight who was playing, the score, and key highlights from the game.
 
-The entire podcast runtime should be kept short, about 15-20minutes. Remember to keep the content fun and engaging!"""
+The entire podcast runtime should be kept short, about 10minutes. Remember to keep the content fun and engaging!"""
             
             # Create a chat session with system instructions
             chat = self.model.start_chat(history=[])
