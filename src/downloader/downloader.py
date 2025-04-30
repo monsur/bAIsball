@@ -2,9 +2,8 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-import argparse
-from datetime import datetime, timedelta
 import time
+from src.args import get_common_args, validate_date
 
 class ContentDownloader:
     def __init__(self, output_dir='output/raw_html'):
@@ -85,23 +84,14 @@ class ContentDownloader:
         return downloaded_files
 
 def main():
-    parser = argparse.ArgumentParser(description='Download baseball game box scores from ESPN')
-    parser.add_argument('--date', type=str, help='Date in YYYYMMDD format (default: yesterday)', 
-                       default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
-    parser.add_argument('--output-dir', type=str, default='output/raw_html',
-                       help='Directory to save downloaded files (default: output/raw_html)')
-    parser.add_argument('--delay', type=int, default=2,
-                       help='Delay in seconds between downloads (default: 2)')
-    args = parser.parse_args()
+    args = get_common_args('Download baseball game box scores from ESPN')
 
     # Validate date format
-    try:
-        datetime.strptime(args.date, '%Y%m%d')
-    except ValueError:
+    if not validate_date(args.date):
         print("Error: Date must be in YYYYMMDD format")
         return
 
-    downloader = ContentDownloader(args.output_dir)
+    downloader = ContentDownloader(args.raw_dir)
     
     # Construct scoreboard URL with date
     scoreboard_url = f"https://www.espn.com/mlb/scoreboard/_/date/{args.date}"
