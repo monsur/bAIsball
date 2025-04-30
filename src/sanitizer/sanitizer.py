@@ -63,7 +63,7 @@ class ContentSanitizer:
             print(f"Error filtering HTML: {e}")
             return None
 
-    def process_files(self, enable_filter=True):
+    def process_files(self, enable_filter=False):
         """Process all HTML files in the input directory."""
         for filename in os.listdir(self.input_dir):
             if not filename.endswith('.html'):
@@ -96,12 +96,12 @@ def main():
                        help='Directory containing input HTML files (default: raw_html)')
     parser.add_argument('--output-dir', type=str, default='sanitized_html',
                        help='Directory to save sanitized files (default: sanitized_html)')
-    parser.add_argument('--no-filter', action='store_true',
-                       help='Disable HTML filtering (files will be copied as-is)')
+    parser.add_argument('--sanitize', action='store_true',
+                       help='Enable HTML filtering (files will be filtered by default)')
     args = parser.parse_args()
 
     sanitizer = ContentSanitizer(args.input_dir, args.output_dir)
-    sanitizer.process_files(not args.no_filter)
+    sanitizer.process_files(args.sanitize)
 
 if __name__ == "__main__":
     main() 
