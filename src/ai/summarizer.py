@@ -66,11 +66,6 @@ class GameSummarizer:
 def main():
     args = get_common_args('Generate baseball game summaries')
 
-    # Validate date format
-    if not validate_date(args.date):
-        print("Error: Date must be in YYYYMMDD format")
-        return
-
     summarizer = GameSummarizer(args.sanitized_dir, args.output_dir)
     summarizer.process_files()
 

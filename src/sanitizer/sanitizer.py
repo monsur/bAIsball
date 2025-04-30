@@ -53,11 +53,6 @@ class HTMLSanitizer:
 def main():
     args = get_common_args('Sanitize baseball game HTML files')
 
-    # Validate date format
-    if not validate_date(args.date):
-        print("Error: Date must be in YYYYMMDD format")
-        return
-
     sanitizer = HTMLSanitizer(args.raw_dir, args.sanitized_dir)
     sanitizer.process_files(filter_html=args.filter)
 
