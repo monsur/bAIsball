@@ -33,7 +33,7 @@ The output is a text file with the transcript for the podcast. The podcast shoul
 
 After that, the podcast should continue through each game. It should highlight who was playing, the score, and key highlights from the game.
 
-The entire podcast runtime should be kept short, about 10minutes. Remember to keep the content fun and engaging!"""
+The entire podcast runtime should be kept short, about 15-20minutes. Remember to keep the content fun and engaging!"""
             
             # Create a chat session with system instructions
             chat = self.model.start_chat(history=[])
@@ -99,10 +99,10 @@ The entire podcast runtime should be kept short, about 10minutes. Remember to ke
 
 def main():
     parser = argparse.ArgumentParser(description='Generate baseball game summaries using AI')
-    parser.add_argument('--input-dir', type=str, default='sanitized_html',
-                       help='Directory containing input HTML files (default: sanitized_html)')
-    parser.add_argument('--output-dir', type=str, default='summaries',
-                       help='Directory to save summary files (default: summaries)')
+    parser.add_argument('--input-dir', type=str, default='output/sanitized_html',
+                       help='Directory containing input HTML files (default: output/sanitized_html)')
+    parser.add_argument('--output-dir', type=str, default='output/summaries',
+                       help='Directory to save summary files (default: output/summaries)')
     args = parser.parse_args()
 
     summarizer = GameSummarizer(args.input_dir, args.output_dir)

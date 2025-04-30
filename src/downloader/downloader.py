@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import time
 
 class ContentDownloader:
-    def __init__(self, output_dir='raw_html'):
+    def __init__(self, output_dir='output/raw_html'):
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
 
@@ -62,8 +62,8 @@ def main():
     parser = argparse.ArgumentParser(description='Download baseball game box scores from ESPN')
     parser.add_argument('--date', type=str, help='Date in YYYYMMDD format (default: yesterday)', 
                        default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
-    parser.add_argument('--output-dir', type=str, default='raw_html',
-                       help='Directory to save downloaded files (default: raw_html)')
+    parser.add_argument('--output-dir', type=str, default='output/raw_html',
+                       help='Directory to save downloaded files (default: output/raw_html)')
     parser.add_argument('--delay', type=int, default=2,
                        help='Delay in seconds between downloads (default: 2)')
     args = parser.parse_args()
@@ -97,10 +97,7 @@ def main():
         filepath = downloader.download_content(url)
         if filepath:
             print(f"Saved to: {filepath}")
-        
-        # Wait before next download
-        if url != box_score_urls[-1]:  # Don't wait after the last URL
-            print(f"Waiting {args.delay} seconds before next download...")
+        if url != box_score_urls[-1]:
             time.sleep(args.delay)
 
 if __name__ == "__main__":

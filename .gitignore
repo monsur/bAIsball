@@ -35,8 +35,4 @@ ENV/
 .DS_Store
 
 # Project specific
-html_files/
-summaries/ 
-test_output/
-raw_html/
-sanitized_html/
+output/

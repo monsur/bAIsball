@@ -4,22 +4,28 @@ from src.downloader.downloader import ContentDownloader
 from src.sanitizer.sanitizer import ContentSanitizer
 from src.ai.summarizer import GameSummarizer
 import time
+import os
 
 def main():
     parser = argparse.ArgumentParser(description='Generate baseball game summaries')
     parser.add_argument('--date', type=str, help='Date in YYYYMMDD format (default: yesterday)', 
                        default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
-    parser.add_argument('--raw-dir', type=str, default='raw_html',
-                       help='Directory for raw HTML files (default: raw_html)')
-    parser.add_argument('--sanitized-dir', type=str, default='sanitized_html',
-                       help='Directory for sanitized HTML files (default: sanitized_html)')
-    parser.add_argument('--output-dir', type=str, default='summaries',
-                       help='Directory for summary files (default: summaries)')
+    parser.add_argument('--raw-dir', type=str, default='output/raw_html',
+                       help='Directory for raw HTML files (default: output/raw_html)')
+    parser.add_argument('--sanitized-dir', type=str, default='output/sanitized_html',
+                       help='Directory for sanitized HTML files (default: output/sanitized_html)')
+    parser.add_argument('--output-dir', type=str, default='output/summaries',
+                       help='Directory for summary files (default: output/summaries)')
     parser.add_argument('--filter', action='store_true',
-                       help='Remove script tags from HTML files')
+                       help='Remove script, style, and link tags from HTML files')
     parser.add_argument('--delay', type=int, default=60,
                        help='Delay in seconds between downloads (default: 60)')
     args = parser.parse_args()
+
+    # Create output directories if they don't exist
+    os.makedirs(args.raw_dir, exist_ok=True)
+    os.makedirs(args.sanitized_dir, exist_ok=True)
+    os.makedirs(args.output_dir, exist_ok=True)
 
     # Step 1: Download content
     print("\n=== Downloading Content ===")

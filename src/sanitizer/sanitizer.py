@@ -59,10 +59,10 @@ class ContentSanitizer:
 
 def main():
     parser = argparse.ArgumentParser(description='Process baseball game HTML content')
-    parser.add_argument('--input-dir', type=str, default='raw_html',
-                       help='Directory containing input HTML files (default: raw_html)')
-    parser.add_argument('--output-dir', type=str, default='sanitized_html',
-                       help='Directory to save processed files (default: sanitized_html)')
+    parser.add_argument('--input-dir', type=str, default='output/raw_html',
+                       help='Directory containing input HTML files (default: output/raw_html)')
+    parser.add_argument('--output-dir', type=str, default='output/sanitized_html',
+                       help='Directory to save processed files (default: output/sanitized_html)')
     parser.add_argument('--filter', action='store_true',
                        help='Remove script, style, and link tags from HTML files')
     args = parser.parse_args()
