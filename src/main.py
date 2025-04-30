@@ -1,8 +1,8 @@
 import argparse
 from datetime import datetime, timedelta
-from downloader.downloader import ContentDownloader
-from sanitizer.sanitizer import ContentSanitizer
-from ai.summarizer import GameSummarizer
+from src.downloader.downloader import ContentDownloader
+from src.sanitizer.sanitizer import ContentSanitizer
+from src.ai.summarizer import GameSummarizer
 import time
 
 def main():
