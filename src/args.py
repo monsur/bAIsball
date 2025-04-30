@@ -16,12 +16,13 @@ def get_common_args(description):
                        help='Delay in seconds between downloads (default: 2)')
     parser.add_argument('--filter', action='store_true',
                        help='Filter HTML content (remove script, style, and link tags)')
-    return parser.parse_args()
-
-def validate_date(date_str):
-    """Validate date format."""
+    
+    args = parser.parse_args()
+    
+    # Validate date format
     try:
-        datetime.strptime(date_str, '%Y%m%d')
-        return True
+        datetime.strptime(args.date, '%Y%m%d')
     except ValueError:
-        return False 
+        parser.error("Date must be in YYYYMMDD format")
+    
+    return args 

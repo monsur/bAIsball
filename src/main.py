@@ -2,15 +2,10 @@ import os
 from src.downloader.downloader import ContentDownloader
 from src.sanitizer.sanitizer import HTMLSanitizer
 from src.ai.summarizer import GameSummarizer
-from src.args import get_common_args, validate_date
+from src.args import get_common_args
 
 def main():
     args = get_common_args('Process baseball game summaries')
-
-    # Validate date format
-    if not validate_date(args.date):
-        print("Error: Date must be in YYYYMMDD format")
-        return
 
     # Create output directories
     os.makedirs(args.raw_dir, exist_ok=True)

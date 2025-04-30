@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import time
-from src.args import get_common_args, validate_date
+from src.args import get_common_args
 
 class ContentDownloader:
     def __init__(self, output_dir='output/raw_html'):
@@ -85,11 +85,6 @@ class ContentDownloader:
 
 def main():
     args = get_common_args('Download baseball game box scores from ESPN')
-
-    # Validate date format
-    if not validate_date(args.date):
-        print("Error: Date must be in YYYYMMDD format")
-        return
 
     downloader = ContentDownloader(args.raw_dir)
     
