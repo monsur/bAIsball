@@ -1,6 +1,6 @@
 import os
 from src.downloader.downloader import ContentDownloader
-from src.sanitizer.sanitizer import HTMLSanitizer
+from src.sanitizer.sanitizer import ContentSanitizer
 from src.ai.summarizer import GameSummarizer
 from src.args import get_common_args
 
@@ -24,7 +24,7 @@ def main():
 
     # Sanitize HTML files
     print("\nSanitizing HTML files...")
-    sanitizer = HTMLSanitizer(args.raw_dir, args.sanitized_dir)
+    sanitizer = ContentSanitizer(args.raw_dir, args.sanitized_dir)
     sanitizer.process_files(filter_html=args.filter)
 
     # Generate summaries

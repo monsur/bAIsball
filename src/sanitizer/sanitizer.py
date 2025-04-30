@@ -1,14 +1,14 @@
 import os
-from bs4 import BeautifulSoup
-from src.args import get_common_args, validate_date
+from bs4 import BeautifulSoup, Comment
+from src.args import get_common_args
 
-class HTMLSanitizer:
+class ContentSanitizer:
     def __init__(self, input_dir, output_dir):
         self.input_dir = input_dir
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def sanitize_file(self, filename, filter_html=False):
+    def sanitize_file(self, filename, filter_html=False, prettyprint=False):
         """Sanitize a single HTML file."""
         input_path = os.path.join(self.input_dir, filename)
         output_path = os.path.join(self.output_dir, filename)
@@ -20,20 +20,41 @@ class HTMLSanitizer:
             soup = BeautifulSoup(html_content, 'html.parser')
 
             if filter_html:
-                # Remove script, style, and link tags
-                for tag in soup.find_all(['script', 'style', 'link']):
+                # Remove script, style, link, and img tags
+                for tag in soup.find_all(['script', 'style', 'link', 'img']):
                     tag.decompose()
+
+                # Remove HTML comments
+                for comment in soup.find_all(string=lambda text: isinstance(text, Comment)):
+                    comment.extract()
+
+                # Remove HeaderScoreboardWrapper div
+                for div in soup.find_all('div', class_='HeaderScoreboardWrapper'):
+                    div.decompose()
+
+                # Remove Site Header Wrapper div
+                for div in soup.find_all('header', class_='db Site__Header__Wrapper sticky'):
+                    div.decompose()
+
+            # Get the HTML content
+            if prettyprint:
+                html_content = soup.prettify()
+            else:
+                html_content = str(soup)
+                # Remove empty lines
+                lines = [line for line in html_content.split('\n') if line.strip()]
+                html_content = '\n'.join(lines)
 
             # Save sanitized HTML
             with open(output_path, 'w', encoding='utf-8') as f:
-                f.write(str(soup))
+                f.write(html_content)
             
             return True
         except Exception as e:
             print(f"Error processing {filename}: {e}")
             return False
 
-    def process_files(self, filter_html=False):
+    def process_files(self, filter_html=False, prettyprint=False):
         """Process all HTML files in the input directory."""
         files = [f for f in os.listdir(self.input_dir) if f.endswith('.html')]
         if not files:
@@ -44,7 +65,7 @@ class HTMLSanitizer:
         success_count = 0
 
         for filename in files:
-            if self.sanitize_file(filename, filter_html):
+            if self.sanitize_file(filename, filter_html, prettyprint):
                 success_count += 1
                 print(f"Processed: {filename}")
 
@@ -53,8 +74,8 @@ class HTMLSanitizer:
 def main():
     args = get_common_args('Sanitize baseball game HTML files')
 
-    sanitizer = HTMLSanitizer(args.raw_dir, args.sanitized_dir)
-    sanitizer.process_files(filter_html=args.filter)
+    sanitizer = ContentSanitizer(args.raw_dir, args.sanitized_dir)
+    sanitizer.process_files(filter_html=args.filter, prettyprint=args.prettyprint)
 
 if __name__ == "__main__":
     main() 

@@ -16,6 +16,8 @@ def get_common_args(description):
                        help='Delay in seconds between downloads (default: 2)')
     parser.add_argument('--filter', action='store_true',
                        help='Filter HTML content (remove script, style, and link tags)')
+    parser.add_argument('--prettyprint', action='store_true',
+                       help='Pretty print the HTML output')
     
     args = parser.parse_args()
     

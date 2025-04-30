@@ -1,7 +1,7 @@
 import os
 import google.generativeai as genai
 from bs4 import BeautifulSoup
-from src.args import get_common_args, validate_date
+from src.args import get_common_args
 
 class GameSummarizer:
     def __init__(self, input_dir, output_dir):
