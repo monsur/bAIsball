@@ -1,6 +1,7 @@
 import os
 from src.args import get_common_args
 from src.ai.gemini import Gemini
+from src.ai.openai_api import OpenAIAPI
 
 class GameSummarizer:
     def __init__(self, input_dir, output_dir, date):
@@ -9,7 +10,6 @@ class GameSummarizer:
         self.date = date
         os.makedirs(self.output_dir, exist_ok=True)
         
-        # Initialize Gemini
         self.client = Gemini(f"""
 You are kAIrl, a baseball podcaster. Your voice and tone is similar to the announcer Karl Ravech.
 
