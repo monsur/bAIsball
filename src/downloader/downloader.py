@@ -1,5 +1,6 @@
 import os
 import requests
+import shutil
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import time
@@ -9,6 +10,15 @@ class ContentDownloader:
     def __init__(self, output_dir='output/raw_html'):
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
+        for item in os.listdir(self.output_dir):
+            item_path = os.path.join(self.output_dir, item)
+            try:
+                if os.path.isfile(item_path) or os.path.islink(item_path):
+                    os.unlink(item_path)
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
+            except Exception as e:
+                print(f"Error deleting {item_path}: {e}")
 
     def get_box_score_urls(self, scoreboard_url):
         """Extract box score URLs from the MLB scoreboard page."""

@@ -7,6 +7,15 @@ class ContentSanitizer:
         self.input_dir = input_dir
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
+        for item in os.listdir(self.output_dir):
+            item_path = os.path.join(self.output_dir, item)
+            try:
+                if os.path.isfile(item_path) or os.path.islink(item_path):
+                    os.unlink(item_path)
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
+            except Exception as e:
+                print(f"Error deleting {item_path}: {e}")
 
     def sanitize_file(self, filename, filter_html=False, prettyprint=False):
         """Sanitize a single HTML file."""
