@@ -16,12 +16,9 @@ class GameSummarizer:
         genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
         self.model = genai.GenerativeModel('gemini-2.0-flash')
 
-    def generate_summary(self, html_content):
+    def generate_summary(self, content):
         """Generate a summary of the game using Gemini."""
         try:
-            # Extract text from HTML
-            soup = BeautifulSoup(html_content, 'html.parser')
-            text = soup.get_text(separator=' ', strip=True)
 
             # Generate summary
             response = self.model.generate_content(
@@ -29,7 +26,7 @@ class GameSummarizer:
                 Focus on key moments, notable performances, and the final outcome.
                 
                 Game details:
-                {text}
+                {content}
                 """
             )
             return response.text
@@ -47,23 +44,20 @@ class GameSummarizer:
         print(f"Processing {len(files)} files...")
         success_count = 0
 
+        content = ""
         for filename in files:
             input_path = os.path.join(self.input_dir, filename)
-            output_path = os.path.join(self.output_dir, f"{os.path.splitext(filename)[0]}_summary.txt")
 
             try:
                 with open(input_path, 'r', encoding='utf-8') as f:
                     html_content = f.read()
-
-                summary = self.generate_summary(html_content)
-                if summary:
-                    with open(output_path, 'w', encoding='utf-8') as f:
-                        f.write(summary)
-                    success_count += 1
-                    print(f"Generated summary for: {filename}")
+                    content += "\n\n" + html_content
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 
+        print(content)
+#        summary = self.generate_summary(content)
+ #       print(summary)
         print(f"\nSuccessfully generated {success_count} out of {len(files)} summaries.")
 
 def main():
