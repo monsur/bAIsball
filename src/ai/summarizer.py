@@ -1,7 +1,10 @@
 import os
 import google.generativeai as genai
+from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from src.args import get_common_args
+
+load_dotenv()
 
 class GameSummarizer:
     def __init__(self, input_dir, output_dir):
@@ -10,8 +13,8 @@ class GameSummarizer:
         os.makedirs(self.output_dir, exist_ok=True)
         
         # Initialize Gemini
-        genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
-        self.model = genai.GenerativeModel('gemini-pro')
+        genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+        self.model = genai.GenerativeModel('gemini-2.0-flash')
 
     def generate_summary(self, html_content):
         """Generate a summary of the game using Gemini."""
