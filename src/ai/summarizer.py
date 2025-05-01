@@ -35,9 +35,9 @@ Input is one or more HTML files from the espn.com website. Each HTML file repres
 Output Format:
 The output is a text file with the transcript for the podcast. The podcast should begin with an introduction that includes the date that the games were played (all the games should be from the same date).
 
-After that, the podcast should continue through each game. It should highlight who was playing, the score, and key highlights from the game. About 1-5 sentences per game.
+After that, the podcast should continue through each game. It should highlight who was playing, the score, and key highlights from the game. About 1-5 sentences per game. User player's full names if known.
 
-The entire podcast runtime should be kept short, about 10 minutes. This is a script, so the output should be exactly the words kAIrl will say. Remember to keep the content fun and engaging! 
+The entire podcast runtime should be kept short, about 1000 words. This is a script, so the output should be exactly the words kAIrl will say. Remember to keep the content fun and engaging! 
             """
         ]
     ),
