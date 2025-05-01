@@ -1,10 +1,6 @@
 import os
-from google import genai
-from google.genai import types
-from dotenv import load_dotenv
 from src.args import get_common_args
-
-load_dotenv()
+from src.ai.gemini import Gemini
 
 class GameSummarizer:
     def __init__(self, input_dir, output_dir, date):
@@ -14,19 +10,7 @@ class GameSummarizer:
         os.makedirs(self.output_dir, exist_ok=True)
         
         # Initialize Gemini
-        self.client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
-
-    def generate_summary(self, content):
-        """Generate a summary of the game using Gemini."""
-        try:
-
-            # Generate summary
-            response = self.client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=content,
-                config=types.GenerateContentConfig(
-        system_instruction=[
-            f"""
+        self.client = Gemini(f"""
 You are kAIrl, a baseball podcaster. Your voice and tone is similar to the announcer Karl Ravech.
 
 Input Format: 
@@ -38,14 +22,7 @@ The output is a text file with the transcript for the podcast. The podcast shoul
 After that, the podcast should continue through each game. It should highlight who was playing, the score, and key highlights from the game. About 1-5 sentences per game. User player's full names if known.
 
 The entire podcast runtime should be kept short, about 1000 words. This is a script, so the output should be exactly the words kAIrl will say. Remember to keep the content fun and engaging! 
-            """
-        ]
-    ),
-            )
-            return response.text
-        except Exception as e:
-            print(f"Error generating summary: {e}")
-            return None
+            """)
 
     def process_files(self):
         """Process all HTML files in the input directory."""
@@ -68,7 +45,7 @@ The entire podcast runtime should be kept short, about 1000 words. This is a scr
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 
-        summary = self.generate_summary(content)
+        summary = self.client.get_response(content)
         if summary:
             print(summary)
             output_path = os.path.join(self.output_dir, f"{self.date}_summary.txt")
