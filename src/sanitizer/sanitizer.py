@@ -52,6 +52,11 @@ class ContentSanitizer:
                 for div in soup.find_all('header', class_='db Site__Header__Wrapper sticky'):
                     div.decompose()
 
+                # Remove all classes from all tags
+                for tag in soup.find_all(True):  # True matches all tags
+                    if 'class' in tag.attrs:
+                        del tag.attrs['class']
+
             # Get the HTML content
             if prettyprint:
                 html_content = soup.prettify()
