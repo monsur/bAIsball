@@ -7,9 +7,10 @@ from src.args import get_common_args
 load_dotenv()
 
 class GameSummarizer:
-    def __init__(self, input_dir, output_dir):
+    def __init__(self, input_dir, output_dir, date):
         self.input_dir = input_dir
         self.output_dir = output_dir
+        self.date = date
         os.makedirs(self.output_dir, exist_ok=True)
         
         # Initialize Gemini
@@ -68,12 +69,16 @@ The entire podcast runtime should be kept short, about 15-20minutes. Remember to
                 print(f"Error processing {filename}: {e}")
 
         summary = self.generate_summary(content)
-        print(summary)
+        if summary:
+            print(summary)
+            output_path = os.path.join(self.output_dir, f"{self.date}_summary.txt")
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(summary)
 
 def main():
     args = get_common_args('Generate baseball game summaries')
 
-    summarizer = GameSummarizer(args.sanitized_dir, args.output_dir)
+    summarizer = GameSummarizer(args.sanitized_dir, args.output_dir, args.date)
     summarizer.process_files()
 
 if __name__ == "__main__":
