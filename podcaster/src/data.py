@@ -1,4 +1,3 @@
-import logging
 import os
 import requests
 import time
@@ -41,30 +40,17 @@ class DataDownloader:
             
         return boxscore_urls
 
-    def save_boxscore_data(self, url):
-        boxscore_html = self.make_request(url)
+    def save_data(self, url, suffix):
+        html = self.make_request(url)
             
         # Create filename from URL
-        filename = f"{url.split('/')[-1]}-boxscore.html"
+        filename = f"{url.split('/')[-1]}-{suffix}.html"
         filepath = os.path.join(self.output_dir, filename)
         
         # Save HTML content
         with open(filepath, 'w', encoding='utf-8') as f:
             logger.info(f"Writing file {filepath}")
-            f.write(boxscore_html)
-
-    def save_recap_data(self, url):
-        url = url.replace("boxscore", "recap")
-        recap_html = self.make_request(url)
-            
-        # Create filename from URL
-        filename = f"{url.split('/')[-1]}-recap.html"
-        filepath = os.path.join(self.output_dir, filename)
-        
-        # Save HTML content
-        with open(filepath, 'w', encoding='utf-8') as f:
-            logger.info(f"Writing file {filepath}")
-            f.write(recap_html)
+            f.write(html)
 
     def retrieve_data(self):
         logger.info(f"Fetching box scores from: {self.source_url}")
@@ -75,8 +61,9 @@ class DataDownloader:
         logger.info(f"Found {len(boxscore_urls)} games")
         
         for boxscore_url in boxscore_urls:
-            self.save_boxscore_data(boxscore_url)
-            self.save_recap_data(boxscore_url)
+            self.save_data(boxscore_url, "boxscore")
+            time.sleep(self.delay)
+            self.save_data(boxscore_url.replace("boxscore", "recap"), "recap")
             time.sleep(self.delay)
         
 def main():
