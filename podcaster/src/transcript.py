@@ -1,7 +1,7 @@
 import os
 from podcaster.src import helper
-from src.ai.gemini import Gemini
-from src.ai.openai_api import OpenAIAPI
+from src.gemini import Gemini
+from src.openai_api import OpenAIAPI
 
 class DoAI:
     def __init__(self, args):
