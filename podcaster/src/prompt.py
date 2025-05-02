@@ -82,7 +82,7 @@ class PromptGenerator:
 
         content = f"There are {len(files)} games in this prompt."
         for filename in files:
-            content += f"\n\n========== GAME ==========\n\n"
+            content += f"\n\n## GAME ##\n\n"
             content += self.process_file(filename)
             
         with open(os.path.join(self.output_dir, "prompt.txt"), 'w', encoding='utf-8') as f:

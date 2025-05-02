@@ -21,7 +21,7 @@ class OpenAIAPI:
                      "role": "user",
                      "content": input
                }
-            ])
+            ], temperature=0.2)
          return response.output_text
       except Exception as e:
          print(f"Error generating summary: {e}")
