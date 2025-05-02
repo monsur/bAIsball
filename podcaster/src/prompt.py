@@ -63,9 +63,16 @@ class PromptGenerator:
             content = '\n'.join(lines)
             
         return content
-        
+    
+    def process_recap_file(self, filename):
+        with open(os.path.join(self.input_dir, filename), 'r', encoding='utf-8') as f:
+            content = f.read()
+        soup = BeautifulSoup(content, 'html.parser')
+        return soup.find(class_='Story__Body t__body').get_text()
+
     def process_file(self, filename):
         content = self.process_boxscore_file(filename)
+        content += "<recap>" + self.process_recap_file(filename.replace("boxscore", "recap")) + "</recap>"
         
         prompt_filename = os.path.join(self.output_dir, "data", filename.replace("boxscore", "prompt"))
         with open(prompt_filename, 'w', encoding='utf-8') as f:
