@@ -1,7 +1,16 @@
 import argparse
+import logging
 import os
 import shutil
 from datetime import datetime, timedelta
+
+# TODO: Better logging config
+logger = logging.getLogger()
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
+
+def get_logger():
+    return logger
 
 def get_args():
     """Get common arguments used across all scripts."""
@@ -21,6 +30,10 @@ def get_args():
     
     args.output_dir = os.path.join(os.getcwd(), 'podcaster/output', args.date)
     make_dir(args.output_dir)
+
+    logging.basicConfig(filename=os.path.join(args.output_dir, "log.log"),
+                        format='%(asctime)s %(message)s',
+                        level=logging.DEBUG)
 
     return args 
 

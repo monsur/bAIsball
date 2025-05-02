@@ -1,5 +1,8 @@
+import logging
 import os
 from podcaster.src import helper
+
+logger = helper.get_logger()
 
 class DataDownloader:
     def __init__(self, args):
@@ -9,11 +12,13 @@ class DataDownloader:
         helper.make_dir(self.output_dir, True)
 
     def retrieve_data(self):
+        logger.info("Started")
         pass
         
 def main():
     a = helper.get_args()
     downloader = DataDownloader(a)
+    downloader.retrieve_data()
 
 if __name__ == "__main__":
     main() 
