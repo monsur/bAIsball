@@ -8,11 +8,12 @@ class Gemini:
         load_dotenv()
         self.client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
         self.system_instructions = system_instructions
+        self.model = "gemini-2.0-flash"
 
     def get_response(self, input):
         try:
             response = self.client.models.generate_content(
-                model="gemini-2.0-flash",
+                model=self.model,
                 contents=input,
                 config=types.GenerateContentConfig(
                     system_instruction=[self.system_instructions]
