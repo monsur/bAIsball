@@ -19,6 +19,8 @@ def get_args():
                        default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
     parser.add_argument('--delay', type=int, default=2,
                        help='Delay in seconds between downloads (default: 2)')
+    parser.add_argument('--prettyprint', action='store_true',
+                       help='whether to prettyprint the prompt file')
     
     args = parser.parse_args()
     
