@@ -30,7 +30,7 @@ The entire podcast runtime should be kept short, about 1000 words. This is a scr
             
         transcript = self.client.get_response(prompt_text)
         if transcript:
-            output_path = os.path.join(self.output_dir, f"{self.date}_transcript.txt")
+            output_path = os.path.join(self.output_dir, f"{self.date}-transcript.txt")
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(transcript)
 
