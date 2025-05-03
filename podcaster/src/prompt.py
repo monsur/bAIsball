@@ -1,9 +1,10 @@
 import os
 from bs4 import BeautifulSoup, Comment
 from podcaster.src import args_helper
+from podcaster.src import logger_helper
 from podcaster.src import os_helper
 
-logger = args_helper.get_logger()
+logger = logger_helper.get_logger(__name__)
 
 def run(args):
 

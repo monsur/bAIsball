@@ -1,16 +1,7 @@
 import argparse
-import logging
 import os
 from datetime import datetime, timedelta
 from podcaster.src import os_helper
-
-# TODO: Better logging config
-logger = logging.getLogger()
-logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG)
-
-def get_logger():
-    return logger
 
 def get_args():
     """Get common arguments used across all scripts."""
@@ -32,10 +23,8 @@ def get_args():
     
     args.output_dir = os_helper.join(os.getcwd(), 'podcaster/output', args.date)
     args.output_data_dir = os_helper.join(args.output_dir, "data")
+    args.output_log_dir = os_helper.join(args.output_dir, "logs")
     os_helper.make_dir(args.output_data_dir)
-
-    logging.basicConfig(filename=os_helper.join(args.output_dir, "log.log"),
-                        format='%(asctime)s %(message)s',
-                        level=logging.DEBUG)
+    os_helper.make_dir(args.output_log_dir)
 
     return args

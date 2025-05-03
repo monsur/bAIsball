@@ -2,8 +2,9 @@
 
 import logging
 import sys
-import os
 import datetime
+from podcaster.src import args_helper
+from podcaster.src import os_helper
 
 LOG_LEVEL = logging.INFO
 _logger = None
@@ -17,11 +18,12 @@ def initialize_logger(log_identifier=None):
 
     if log_identifier is None:
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        _log_identifier = f"default_run_{timestamp}"
+        _log_identifier = f"log_{timestamp}"
     else:
         _log_identifier = log_identifier
 
-    LOG_FILE = f'my_program_{_log_identifier}.log'
+    args = args_helper.get_args()
+    LOG_FILE = os_helper.join(args.output_log_dir, f"{_log_identifier}.log")
 
     logging.basicConfig(
         level=LOG_LEVEL,
