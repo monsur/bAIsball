@@ -4,14 +4,10 @@ from podcaster.src import helper
 
 logger = helper.get_logger()
 
-class PromptGenerator:
-    def __init__(self, args):
-        self.output_dir = args.output_dir
-        self.input_dir = os.path.join(args.output_dir, "data")
-        self.prettyprint = args.prettyprint
-        
-    def process_boxscore_file(self, filename):
-        with open(os.path.join(self.input_dir, filename), 'r', encoding='utf-8') as f:
+def run(args):
+
+    def process_boxscore_file(filename):
+        with open(os.path.join(args.output_data_dir, filename), 'r', encoding='utf-8') as f:
             content = f.read()
         
         soup = BeautifulSoup(content, 'html.parser')
@@ -54,7 +50,7 @@ class PromptGenerator:
                 del tag.attrs['class']
 
         # Get the HTML content
-        if self.prettyprint:
+        if args.prettyprint:
             content = soup.prettify()
         else:
             content = str(soup)
@@ -64,41 +60,39 @@ class PromptGenerator:
             
         return content
     
-    def process_recap_file(self, filename):
-        with open(os.path.join(self.input_dir, filename), 'r', encoding='utf-8') as f:
+    def process_recap_file(filename):
+        with open(os.path.join(args.output_data_dir, filename), 'r', encoding='utf-8') as f:
             content = f.read()
         soup = BeautifulSoup(content, 'html.parser')
         return soup.find(class_='Story__Body t__body').get_text()
 
-    def process_file(self, filename):
-        content = self.process_boxscore_file(filename)
-        content += "<recap>" + self.process_recap_file(filename.replace("boxscore", "recap")) + "</recap>"
+    def process_file(filename):
+        content = process_boxscore_file(filename)
+        content += "<recap>" + process_recap_file(filename.replace("boxscore", "recap")) + "</recap>"
         
-        prompt_filename = os.path.join(self.output_dir, "data", filename.replace("boxscore", "prompt"))
+        prompt_filename = os.path.join(args.output_data_dir, filename.replace("boxscore", "prompt"))
         with open(prompt_filename, 'w', encoding='utf-8') as f:
             f.write(content)
 
         return content
-    
-    def generate(self):
-        files = [f for f in os.listdir(self.input_dir) if f.endswith('boxscore.html')]
+ 
+    files = [f for f in os.listdir(args.output_data_dir) if f.endswith('boxscore.html')]
 
-        if not files:
-            logger.error("No HTML files found in input directory.")
-            return
+    if not files:
+        logger.error("No HTML files found in input directory.")
+        return
 
-        content = f"There are {len(files)} games in this prompt."
-        for filename in files:
-            content += f"\n\n## GAME ##\n\n"
-            content += self.process_file(filename)
+    content = f"There are {len(files)} games in this prompt."
+    for filename in files:
+        content += f"\n\n## GAME ##\n\n"
+        content += process_file(filename)
             
-        with open(os.path.join(self.output_dir, "prompt.txt"), 'w', encoding='utf-8') as f:
-            f.write(content)
+    with open(os.path.join(args.output_dir, "prompt.txt"), 'w', encoding='utf-8') as f:
+        f.write(content)
 
 def main():
     a = helper.get_args()
-    generator = PromptGenerator(a)
-    generator.generate()
+    run(a)
 
 if __name__ == "__main__":
     main() 
