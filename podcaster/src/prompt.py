@@ -86,9 +86,5 @@ def run(args):
         content += process_file(filename)
     os_helper.write_file(content, args.output_dir, "prompt.txt")
 
-def main():
-    a = args_helper.get_args()
-    run(a)
-
 if __name__ == "__main__":
-    main() 
+    run(args_helper.get_args())

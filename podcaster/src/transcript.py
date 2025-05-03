@@ -29,9 +29,5 @@ The entire podcast runtime should be kept short, about 2000 words. Achieve this 
     if transcript:
         os_helper.write_file(transcript, args.output_dir, f"{args.date}-transcript.txt")
 
-def main():
-    a = args_helper.get_args()
-    run(a)
-
 if __name__ == "__main__":
-    main() 
+    run(args_helper.get_args())

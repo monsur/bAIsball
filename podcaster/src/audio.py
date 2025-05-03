@@ -38,9 +38,5 @@ Pauses: Short, purposeful pauses after key moments in the game.
         logger.error(f"Error generating summary: {e}")
         return None
 
-def main():
-    a = args_helper.get_args()
-    run(a)
-
 if __name__ == "__main__":
-    main() 
+    run(args_helper.get_args())
