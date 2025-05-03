@@ -1,5 +1,5 @@
-import os
-from podcaster.src import helper
+from podcaster.src import args_helper
+from podcaster.src import os_helper
 from podcaster.src.gemini import Gemini
 from podcaster.src.openai_api import OpenAIAPI
 
@@ -23,17 +23,14 @@ Before finishing, validate that the transcript has the same number of games as s
 The entire podcast runtime should be kept short, about 2000 words. Achieve this by keeping individual game summaries concise. However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
 """)
 
-    with open(os.path.join(args.output_dir, "prompt.txt"), 'r', encoding='utf-8') as f:
-        prompt_text = f.read()
+    prompt_text = os_helper.read_file(args.output_dir, "prompt.txt")
             
     transcript = client.get_response(prompt_text)
     if transcript:
-        output_path = os.path.join(args.output_dir, f"{args.date}-transcript.txt")
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(transcript)
+        os_helper.write_file(transcript, args.output_dir, f"{args.date}-transcript.txt")
 
 def main():
-    a = helper.get_args()
+    a = args_helper.get_args()
     run(a)
 
 if __name__ == "__main__":

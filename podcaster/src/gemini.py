@@ -1,12 +1,10 @@
 from google import genai
 from google.genai import types
-from dotenv import load_dotenv
-import os
+from podcaster.src import os_helper
 
 class Gemini:
     def __init__(self, system_instructions):
-        load_dotenv()
-        self.client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
+        self.client = genai.Client(api_key=os_helper.getenv('GEMINI_API_KEY'))
         self.system_instructions = system_instructions
         self.model = "gemini-2.0-flash"
 

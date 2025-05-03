@@ -1,14 +1,14 @@
 import os
 from bs4 import BeautifulSoup, Comment
-from podcaster.src import helper
+from podcaster.src import args_helper
+from podcaster.src import os_helper
 
-logger = helper.get_logger()
+logger = args_helper.get_logger()
 
 def run(args):
 
     def process_boxscore_file(filename):
-        with open(os.path.join(args.output_data_dir, filename), 'r', encoding='utf-8') as f:
-            content = f.read()
+        content = os_helper.read_file(args.output_data_dir, filename)
         
         soup = BeautifulSoup(content, 'html.parser')
 
@@ -61,8 +61,7 @@ def run(args):
         return content
     
     def process_recap_file(filename):
-        with open(os.path.join(args.output_data_dir, filename), 'r', encoding='utf-8') as f:
-            content = f.read()
+        content = os_helper.read_file(args.output_data_dir, filename)
         soup = BeautifulSoup(content, 'html.parser')
         return soup.find(class_='Story__Body t__body').get_text()
 
@@ -70,9 +69,7 @@ def run(args):
         content = process_boxscore_file(filename)
         content += "<recap>" + process_recap_file(filename.replace("boxscore", "recap")) + "</recap>"
         
-        prompt_filename = os.path.join(args.output_data_dir, filename.replace("boxscore", "prompt"))
-        with open(prompt_filename, 'w', encoding='utf-8') as f:
-            f.write(content)
+        os_helper.write_file(content, args.output_data_dir, filename.replace("boxscore", "prompt"))
 
         return content
  
@@ -86,12 +83,10 @@ def run(args):
     for filename in files:
         content += f"\n\n## GAME ##\n\n"
         content += process_file(filename)
-            
-    with open(os.path.join(args.output_dir, "prompt.txt"), 'w', encoding='utf-8') as f:
-        f.write(content)
+    os_helper.write_file(content, args.output_dir, "prompt.txt")
 
 def main():
-    a = helper.get_args()
+    a = args_helper.get_args()
     run(a)
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 import argparse
 import logging
 import os
-import shutil
 from datetime import datetime, timedelta
+from podcaster.src import os_helper
 
 # TODO: Better logging config
 logger = logging.getLogger()
@@ -30,25 +30,12 @@ def get_args():
     except ValueError:
         parser.error("Date must be in YYYYMMDD format")
     
-    args.output_dir = os.path.join(os.getcwd(), 'podcaster/output', args.date)
-    args.output_data_dir = os.path.join(args.output_dir, "data")
-    make_dir(args.output_data_dir)
+    args.output_dir = os_helper.join(os.getcwd(), 'podcaster/output', args.date)
+    args.output_data_dir = os_helper.join(args.output_dir, "data")
+    os_helper.make_dir(args.output_data_dir)
 
-    logging.basicConfig(filename=os.path.join(args.output_dir, "log.log"),
+    logging.basicConfig(filename=os_helper.join(args.output_dir, "log.log"),
                         format='%(asctime)s %(message)s',
                         level=logging.DEBUG)
 
-    return args 
-
-def make_dir(path, clean=False):
-    os.makedirs(path, exist_ok=True)
-    if (clean):
-        for item in os.listdir(path):
-            item_path = os.path.join(path, item)
-            try:
-                if os.path.isfile(item_path) or os.path.islink(item_path):
-                    os.unlink(item_path)
-                elif os.path.isdir(item_path):
-                    shutil.rmtree(item_path)
-            except Exception as e:
-                print(f"Error deleting {item_path}: {e}")
+    return args

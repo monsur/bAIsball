@@ -1,11 +1,11 @@
-import os
 import requests
 import time
 from bs4 import BeautifulSoup
-from podcaster.src import helper
 from urllib.parse import urljoin
+from podcaster.src import args_helper
+from podcaster.src import os_helper
 
-logger = helper.get_logger()
+logger = args_helper.get_logger()
 
 def run(args):
 
@@ -28,7 +28,7 @@ def run(args):
             
         # Create filename from URL
         filename = f"{url.split('/')[-1]}-{suffix}.html"
-        filepath = os.path.join(args.output_data_dir, filename)
+        filepath = os_helper.join(args.output_data_dir, filename)
         
         # Save HTML content
         with open(filepath, 'w', encoding='utf-8') as f:
@@ -62,7 +62,7 @@ def run(args):
         time.sleep(args.delay)
         
 def main():
-    a = helper.get_args()
+    a = args_helper.get_args()
     run(a)
 
 if __name__ == "__main__":

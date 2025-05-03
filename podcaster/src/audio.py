@@ -1,20 +1,16 @@
-import os
-from dotenv import load_dotenv
 from openai import OpenAI
-from podcaster.src import helper
+from podcaster.src import args_helper
+from podcaster.src import os_helper
 
-logger = helper.get_logger()
+logger = args_helper.get_logger()
 
 def run(args):
-    load_dotenv()
-    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    client = OpenAI(api_key=os_helper.getenv('OPENAI_API_KEY'))
 
-    input_path = os.path.join(args.output_dir, f"{args.date}-transcript.txt")
-    with open(input_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    content = os_helper.read_file(args.output_dir, f"{args.date}-transcript.txt")
 
     try:
-        speech_file_path = os.path.join(args.output_dir, f"{args.date}-audio.mp3")
+        speech_file_path = os_helper.join(args.output_dir, f"{args.date}-audio.mp3")
 
         with client.audio.speech.with_streaming_response.create(
             model="gpt-4o-mini-tts",
@@ -42,7 +38,7 @@ Pauses: Short, purposeful pauses after key moments in the game.
         return None
 
 def main():
-    a = helper.get_args()
+    a = args_helper.get_args()
     run(a)
 
 if __name__ == "__main__":
