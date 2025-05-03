@@ -11,6 +11,11 @@ around and learn more about different AI APIs.
 - Send the prompt to AI to generate the podcast transcript.
 - Use the AI TTS API to convert the transcript into an MP3.
 
+## Code
+Source lives in the podcaster/src directory. I used cursor.com to get the
+initial code bootstrapped, but then I ran out of quota so I made a bunch of
+refactorings myself.
+
 ## Examples
 Visit the examples/ directory for examples of the transcript and podcast.
 
