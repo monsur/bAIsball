@@ -1,0 +1,43 @@
+# TODO: pretty this up and use it properly
+
+import logging
+import sys
+import os
+import datetime
+
+LOG_LEVEL = logging.INFO
+_logger = None
+_log_identifier = None  # Store the log identifier
+
+def initialize_logger(log_identifier=None):
+    global _logger
+    global _log_identifier
+    if _logger:
+        return _logger
+
+    if log_identifier is None:
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        _log_identifier = f"default_run_{timestamp}"
+    else:
+        _log_identifier = log_identifier
+
+    LOG_FILE = f'my_program_{_log_identifier}.log'
+
+    logging.basicConfig(
+        level=LOG_LEVEL,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.StreamHandler(sys.stderr),
+            logging.FileHandler(LOG_FILE)
+        ]
+    )
+    _logger = logging.getLogger()
+    return _logger
+
+def get_logger(name):
+    if not _logger:
+        initialize_logger()  # Initialize with a default if not already done
+    return logging.getLogger(name)
+
+def get_log_identifier():
+    return _log_identifier
