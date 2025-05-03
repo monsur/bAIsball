@@ -12,8 +12,9 @@ around and learn more about different AI APIs.
 - Use the AI TTS API to convert the transcript into an MP3.
 
 ## Code
-Source lives in the podcaster/src directory. I used cursor.com to get the
-initial code bootstrapped, but then I ran out of quota so I made a bunch of
+Source lives in the podcaster/src directory. Each of the steps above is
+encapsulated in a different source file. I used cursor.com to get the initial
+code bootstrapped, but then I ran out of quota so I made a bunch of
 refactorings myself.
 
 ## Examples
