@@ -7,14 +7,35 @@ from urllib.parse import urljoin
 
 logger = helper.get_logger()
 
-class DataDownloader:
-    def __init__(self, args):
-        self.source_url = f"https://www.espn.com/mlb/scoreboard/_/date/{args.date}"
-        self.output_dir = os.path.join(args.output_dir, "data")
-        self.delay = args.delay
-        helper.make_dir(self.output_dir, True)
+def run(args):
 
-    def make_request(self, url):
+    def get_boxscore_urls(html, source_url):
+        soup = BeautifulSoup(html, 'html.parser')
+        boxscore_urls = []
+
+        # Find all links that contain "box score" in their text
+        for link in soup.find_all('a', string=lambda text: text and 'box score' in text.lower()):
+            href = link.get('href')
+            if href:
+                # Convert relative URLs to absolute URLs
+                absolute_url = urljoin(source_url, href)
+                boxscore_urls.append(absolute_url)
+            
+        return boxscore_urls
+    
+    def save_data(url, suffix):
+        html = make_request(url)
+            
+        # Create filename from URL
+        filename = f"{url.split('/')[-1]}-{suffix}.html"
+        filepath = os.path.join(args.output_data_dir, filename)
+        
+        # Save HTML content
+        with open(filepath, 'w', encoding='utf-8') as f:
+            logger.info(f"Writing file {filepath}")
+            f.write(html)
+
+    def make_request(url):
         logger.info(f"Retrieving {url}")
         try:
             response = requests.get(url, headers={
@@ -26,50 +47,23 @@ class DataDownloader:
             logger.error(f"Error fetching {url}: {e}")
             return None
 
-    def get_boxscore_urls(self, html):
-        soup = BeautifulSoup(html, 'html.parser')
-        boxscore_urls = []
+    source_url = f"https://www.espn.com/mlb/scoreboard/_/date/{args.date}"
+    logger.info(f"Fetching box scores from: {source_url}")
 
-        # Find all links that contain "box score" in their text
-        for link in soup.find_all('a', string=lambda text: text and 'box score' in text.lower()):
-            href = link.get('href')
-            if href:
-                # Convert relative URLs to absolute URLs
-                absolute_url = urljoin(self.source_url, href)
-                boxscore_urls.append(absolute_url)
-            
-        return boxscore_urls
-
-    def save_data(self, url, suffix):
-        html = self.make_request(url)
-            
-        # Create filename from URL
-        filename = f"{url.split('/')[-1]}-{suffix}.html"
-        filepath = os.path.join(self.output_dir, filename)
+    source_html = make_request(source_url)
         
-        # Save HTML content
-        with open(filepath, 'w', encoding='utf-8') as f:
-            logger.info(f"Writing file {filepath}")
-            f.write(html)
-
-    def retrieve_data(self):
-        logger.info(f"Fetching box scores from: {self.source_url}")
+    boxscore_urls = get_boxscore_urls(source_html, source_url)
+    logger.info(f"Found {len(boxscore_urls)} games")
         
-        source_html = self.make_request(self.source_url)
-        
-        boxscore_urls = self.get_boxscore_urls(source_html)
-        logger.info(f"Found {len(boxscore_urls)} games")
-        
-        for boxscore_url in boxscore_urls:
-            self.save_data(boxscore_url, "boxscore")
-            time.sleep(self.delay)
-            self.save_data(boxscore_url.replace("boxscore", "recap"), "recap")
-            time.sleep(self.delay)
+    for boxscore_url in boxscore_urls:
+        save_data(boxscore_url, "boxscore")
+        time.sleep(args.delay)
+        save_data(boxscore_url.replace("boxscore", "recap"), "recap")
+        time.sleep(args.delay)
         
 def main():
     a = helper.get_args()
-    downloader = DataDownloader(a)
-    downloader.retrieve_data()
+    run(a)
 
 if __name__ == "__main__":
     main() 

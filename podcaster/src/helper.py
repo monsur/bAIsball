@@ -31,7 +31,8 @@ def get_args():
         parser.error("Date must be in YYYYMMDD format")
     
     args.output_dir = os.path.join(os.getcwd(), 'podcaster/output', args.date)
-    make_dir(args.output_dir)
+    args.output_data_dir = os.path.join(args.output_dir, "data")
+    make_dir(args.output_data_dir)
 
     logging.basicConfig(filename=os.path.join(args.output_dir, "log.log"),
                         format='%(asctime)s %(message)s',
