@@ -5,21 +5,18 @@ from podcaster.src import helper
 
 logger = helper.get_logger()
 
-class PodcastAudio:
-   def __init__(self, args):
-      load_dotenv()
-      self.args = args
-      self.client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-      
-   def create(self):
-    input_path = os.path.join(self.args.output_dir, f"{self.args.date}-transcript.txt")
+def run(args):
+    load_dotenv()
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+    input_path = os.path.join(args.output_dir, f"{args.date}-transcript.txt")
     with open(input_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
     try:
-        speech_file_path = os.path.join(self.args.output_dir, f"{self.args.date}-audio.mp3")
+        speech_file_path = os.path.join(args.output_dir, f"{args.date}-audio.mp3")
 
-        with self.client.audio.speech.with_streaming_response.create(
+        with client.audio.speech.with_streaming_response.create(
             model="gpt-4o-mini-tts",
             voice="ash",
             input=content,
@@ -46,8 +43,7 @@ Pauses: Short, purposeful pauses after key moments in the game.
 
 def main():
     a = helper.get_args()
-    p = PodcastAudio(a)
-    p.create()
+    run(a)
 
 if __name__ == "__main__":
     main() 
