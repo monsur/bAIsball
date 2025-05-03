@@ -3,12 +3,8 @@ from podcaster.src import helper
 from podcaster.src.gemini import Gemini
 from podcaster.src.openai_api import OpenAIAPI
 
-class DoAI:
-    def __init__(self, args):
-        self.output_dir = args.output_dir
-        self.date = args.date
-        
-        self.client = OpenAIAPI(f"""
+def run(args):
+    client = OpenAIAPI(f"""
 You are kAIrl, a baseball podcaster. You host a baseball podcast named "Play Ball!" Your voice and tone is similar to the announcer Karl Ravech.
 
 Input Format:
@@ -26,21 +22,19 @@ Before finishing, validate that the transcript has the same number of games as s
 
 The entire podcast runtime should be kept short, about 2000 words. Achieve this by keeping individual game summaries concise. However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
 """)
-    
-    def doit(self):
-        with open(os.path.join(self.output_dir, "prompt.txt"), 'r', encoding='utf-8') as f:
-            prompt_text = f.read()
+
+    with open(os.path.join(args.output_dir, "prompt.txt"), 'r', encoding='utf-8') as f:
+        prompt_text = f.read()
             
-        transcript = self.client.get_response(prompt_text)
-        if transcript:
-            output_path = os.path.join(self.output_dir, f"{self.date}-transcript.txt")
-            with open(output_path, 'w', encoding='utf-8') as f:
-                f.write(transcript)
+    transcript = client.get_response(prompt_text)
+    if transcript:
+        output_path = os.path.join(args.output_dir, f"{args.date}-transcript.txt")
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(transcript)
 
 def main():
     a = helper.get_args()
-    ai = DoAI(a)
-    ai.doit()
+    run(a)
 
 if __name__ == "__main__":
     main() 
