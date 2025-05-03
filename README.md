@@ -12,13 +12,13 @@ around and learn more about different AI APIs.
 - Use the AI TTS API to convert the transcript into an MP3.
 
 ## Code
-Source lives in the `[podcaster/src](https://github.com/monsur/plAI-ball/tree/main/podcaster/src)`
+Source lives in the [podcaster/src](https://github.com/monsur/plAI-ball/tree/main/podcaster/src)
 directory. Each of the steps above is encapsulated in a different source file. I used
 [cursor.com](https://cursor.com) to get the initial code bootstrapped, but then
 I ran out of quota so I made a bunch of refactorings myself.
 
 ## Examples
-Visit the `[examples/](https://github.com/monsur/plAI-ball/tree/main/example)`
+Visit the [examples/](https://github.com/monsur/plAI-ball/tree/main/example)
 directory for examples of the transcript and podcast.
 
 And of course, that logo was generated using Gemini!
