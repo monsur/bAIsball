@@ -9,6 +9,7 @@ logger = logger_helper.get_logger(__name__)
 def run(args):
 
     def process_boxscore_file(filename):
+        logger.info(f"Processing {filename}")
         content = os_helper.read_file(args.output_data_dir, filename)
         
         soup = BeautifulSoup(content, 'html.parser')
@@ -62,13 +63,18 @@ def run(args):
         return content
     
     def process_recap_file(filename):
+        logger.info(f"Processing {filename}")
         content = os_helper.read_file(args.output_data_dir, filename)
         soup = BeautifulSoup(content, 'html.parser')
         return soup.find(class_='Story__Body t__body').get_text()
 
     def process_file(filename):
         content = process_boxscore_file(filename)
-        content += "<recap>" + process_recap_file(filename.replace("boxscore", "recap")) + "</recap>"
+        
+        try:
+            content += "<recap>" + process_recap_file(filename.replace("boxscore", "recap")) + "</recap>"
+        except Exception as e:
+            logger.info(f"No recap for {filename}")
         
         os_helper.write_file(content, args.output_data_dir, filename.replace("boxscore", "prompt"))
 
