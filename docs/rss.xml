@@ -40,12 +40,12 @@
     20250503
    </guid>
    <pubDate>
-    Sun, 04 May 2025 16:16:17
+    Sun, 04 May 2025 16:34:22
    </pubDate>
    <itunes:explicit>
     false
    </itunes:explicit>
-   <enclosure type="audio/mpeg" url="https://plai-ball.s3.amazonaws.com/audio/20250503-audio.mp3"/>
+   <enclosure length="7388928" type="audio/mpeg" url="https://plai-ball.s3.amazonaws.com/audio/20250503-audio.mp3"/>
   </item>
   <item>
    <itunes:episodeType>

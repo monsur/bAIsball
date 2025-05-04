@@ -1,5 +1,6 @@
 import boto3
 import datetime
+import os
 from bs4 import BeautifulSoup, Comment
 from podcaster.src import args_helper
 from podcaster.src import logger_helper
@@ -49,7 +50,10 @@ def run(args):
         explicit.string = "false"
         item.append(explicit)
         
-        enclosure = rss_soup.new_tag("enclosure", type="audio/mpeg", url=f"https://{args.s3_bucket}.s3.amazonaws.com/audio/{args.date}-audio.mp3")
+        enclosure = rss_soup.new_tag("enclosure",
+                                     length=os.path.getsize(f"{args.output_dir}/{args.date}-audio.mp3"), 
+                                     type="audio/mpeg", 
+                                     url=f"https://{args.s3_bucket}.s3.amazonaws.com/audio/{args.date}-audio.mp3")
         item.append(enclosure)
 
         return item
