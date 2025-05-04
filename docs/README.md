@@ -14,6 +14,8 @@ podcasting app: https://www.plai-ball.com/rss.xml
 - Merges the boxscores into a single prompt file.
 - Send the prompt to AI to generate the podcast transcript.
 - Use the AI TTS API to convert the transcript into an MP3.
+- Upload the podcast, transcript, and intermediate files to Amazon S3.
+- Update and publish the RSS feed.
 
 ## Code
 Source lives in the [podcaster/src](https://github.com/monsur/plAI-ball/tree/main/podcaster/src)
