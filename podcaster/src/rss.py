@@ -34,6 +34,22 @@ def run(args):
         dateStr = dateObj.strftime(f"%A, %B %d, %Y")
         title.string = f"plAI ball! {dateStr}"
         item.append(title)
+        
+        description = rss_soup.new_tag("description")
+        description.string = f"AI-curated MLB highlights for games on {dateStr}"
+        item.append(description)
+        
+        guid = rss_soup.new_tag("guid")
+        guid.string = args.date
+        item.append(guid)
+        
+        pubDate = rss_soup.new_tag("pubDate")
+        pubDate.string = datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z")
+        item.append(pubDate)
+        
+        explicit = rss_soup.new_tag("itunes:explicit")
+        explicit.string = "false"
+        item.append(explicit)
 
         return item
     
