@@ -50,6 +50,9 @@ def run(args):
         explicit = rss_soup.new_tag("itunes:explicit")
         explicit.string = "false"
         item.append(explicit)
+        
+        enclosure = rss_soup.new_tag("enclosure", type="audio/mpeg", url=f"https://plai-ball.s3.amazonaws.com/audio/{args.date}-audio.mp3")
+        item.append(enclosure)
 
         return item
     
