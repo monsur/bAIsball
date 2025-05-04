@@ -56,6 +56,11 @@ def run(args):
         explicit.string = "false"
         item.append(explicit)
         
+        transcript = rss_soup.new_tag("podcast:transcript", 
+                                      url=f"https://{args.s3_bucket}.s3.amazonaws.com/audio/{args.date}-transcript.txt",
+                                      type="text/plain")
+        item.append(transcript)
+        
         enclosure = rss_soup.new_tag("enclosure",
                                      length=os.path.getsize(f"{args.output_dir}/{args.date}-audio.mp3"), 
                                      type="audio/mpeg", 
@@ -82,12 +87,19 @@ def run(args):
         s3_path = f"audio/{args.date}-audio.mp3"
         logger.info("Uploading from %s to %s..." % (source_path, s3_path))
         client.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs={"ACL": "public-read"})   
+        source_path = os_helper.join(args.output_dir, f"{args.date}-transcript.txt")
+        s3_path = f"audio/{args.date}-transcript.txt"
+        logger.info("Uploading from %s to %s..." % (source_path, s3_path))
+        client.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs={"ACL": "public-read"})   
 
     # Purge old entries
     items = rss_soup.rss.channel.find_all("item")
     if (len(items) > max_items):
         item = items[-1].extract()
         filename = f"audio/{item.guid.string.strip()}-audio.mp3"
+        logger.info(f"Deleting file {filename}")
+        client.delete_object(Bucket=args.s3_bucket, Key=filename)
+        filename = f"audio/{item.guid.string.strip()}-transcript.txt"
         logger.info(f"Deleting file {filename}")
         client.delete_object(Bucket=args.s3_bucket, Key=filename)
 

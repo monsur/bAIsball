@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
  <channel>
+  <link href="https://www.plai-ball.com/rss.xml" rel="self" type="application/rss+xml"/>
   <title>
    plAI ball!
   </title>
@@ -40,7 +41,7 @@
     20250503
    </guid>
    <pubDate>
-    Sun, 04 May 2025 16:43:26
+    Sun, 04 May 2025 16:53:06
    </pubDate>
    <itunes:duration>
     461
@@ -48,6 +49,7 @@
    <itunes:explicit>
     false
    </itunes:explicit>
+   <podcast:transcript type="text/plain" url="https://plai-ball.s3.amazonaws.com/audio/20250503-transcript.txt"/>
    <enclosure length="7388928" type="audio/mpeg" url="https://plai-ball.s3.amazonaws.com/audio/20250503-audio.mp3"/>
   </item>
   <item>
