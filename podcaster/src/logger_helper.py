@@ -1,10 +1,10 @@
 # TODO: pretty this up and use it properly
 
 import logging
+import os
 import sys
 import datetime
 from podcaster.src import args_helper
-from podcaster.src import os_helper
 
 LOG_LEVEL = logging.INFO
 _logger = None
@@ -23,7 +23,7 @@ def initialize_logger(log_identifier=None):
         _log_identifier = log_identifier
 
     args = args_helper.get_args()
-    LOG_FILE = os_helper.join(args.output_log_dir, f"{_log_identifier}.log")
+    LOG_FILE = os.path.join(args.output_log_dir, f"{_log_identifier}.log")
 
     logging.basicConfig(
         level=LOG_LEVEL,

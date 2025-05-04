@@ -21,7 +21,8 @@ def get_args():
     except ValueError:
         parser.error("Date must be in YYYYMMDD format")
     
-    args.output_dir = os_helper.join(os.getcwd(), 'podcaster/output', args.date)
+    args.output_root = os_helper.join(os.getcwd(), "podcaster/output")
+    args.output_dir = os_helper.join(args.output_root, args.date)
     args.output_data_dir = os_helper.join(args.output_dir, "data")
     args.output_log_dir = os_helper.join(args.output_dir, "logs")
     os_helper.make_dir(args.output_data_dir)

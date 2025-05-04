@@ -11,8 +11,13 @@ def join(*args):
     return os.path.join(*args)
 
 def read_file(*args):
-    with open(join(*args), 'r', encoding='utf-8') as f:
-        return f.read()
+    try:
+        with open(join(*args), 'r', encoding='utf-8') as f:
+            return f.read()
+    except Exception as e:
+        print(f"File not found: {e}")
+        return None
+        
 
 def write_file(content, *args):
     with open(join(*args), 'w', encoding='utf-8') as f:
