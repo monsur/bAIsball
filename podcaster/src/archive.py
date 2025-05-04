@@ -18,15 +18,10 @@ def run(args):
             
             # construct the full upload paths
             relative_path = os.path.relpath(source_path, args.output_dir)
-            s3_path = os.path.join(args.date, relative_path)
+            s3_path = os.path.join("archive", args.date, relative_path)
             
-            extra_args = {}
-            # If its an MP3, make it publicly accessible
-            if (source_path.endswith(".mp3")):
-                extra_args["ACL"] = "public-read"
-
             logger.info("Uploading from %s to %s..." % (source_path, s3_path))
-            s3.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs=extra_args)
+            s3.upload_file(source_path, args.s3_bucket, s3_path)
 
 if __name__ == "__main__":
     run(args_helper.get_args())
