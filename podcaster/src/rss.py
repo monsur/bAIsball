@@ -56,8 +56,16 @@ def run(args):
 
         return item
     
-    rss_soup.rss.channel.find("itunes:explicit").insert_after(get_item())
-    
+    items = rss_soup.rss.channel.find_all("item")
+    exists = False
+    for item in items:
+        guid = item.find("guid").string.strip()
+        if guid == args.date:
+            item.replace_with(get_item())
+            exists = True
+    if not exists:
+        rss_soup.rss.channel.find("itunes:explicit").insert_after(get_item())            
+
     os_helper.write_file(rss_soup.prettify(), "docs/rss.xml")
 
 if __name__ == "__main__":
