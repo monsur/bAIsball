@@ -1,7 +1,6 @@
 import argparse
 import os
 from datetime import datetime, timedelta
-from podcaster.src import os_helper
 
 def get_args():
     """Get common arguments used across all scripts."""
@@ -23,11 +22,11 @@ def get_args():
     
     args.s3_bucket = "plai-ball"
 
-    args.output_root = os_helper.join(os.getcwd(), "podcaster/output")
-    args.output_dir = os_helper.join(args.output_root, args.date)
-    args.output_data_dir = os_helper.join(args.output_dir, "data")
-    args.output_log_dir = os_helper.join(args.output_dir, "logs")
-    os_helper.make_dir(args.output_data_dir)
-    os_helper.make_dir(args.output_log_dir)
+    args.output_root = os.path.join(os.getcwd(), "podcaster/output")
+    args.output_dir = os.path.join(args.output_root, args.date)
+    args.output_data_dir = os.path.join(args.output_dir, "data")
+    args.output_log_dir = os.path.join(args.output_dir, "logs")
+    os.makedirs(args.output_data_dir, exist_ok=True)
+    os.makedirs(args.output_log_dir, exist_ok=True)
     
     return args
