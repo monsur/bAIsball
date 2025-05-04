@@ -26,6 +26,69 @@
   <itunes:explicit>
    false
   </itunes:explicit>
+  <item>
+   <itunes:episodeType>
+    full
+   </itunes:episodeType>
+   <title>
+    plAI ball! Saturday, May 03, 2025
+   </title>
+   <description>
+    AI-curated MLB highlights for games on Saturday, May 03, 2025
+   </description>
+   <guid>
+    20250503
+   </guid>
+   <pubDate>
+    Sun, 04 May 2025 16:16:17
+   </pubDate>
+   <itunes:explicit>
+    false
+   </itunes:explicit>
+   <enclosure type="audio/mpeg" url="https://plai-ball.s3.amazonaws.com/audio/20250503-audio.mp3"/>
+  </item>
+  <item>
+   <itunes:episodeType>
+    full
+   </itunes:episodeType>
+   <title>
+    plAI ball! Friday, May 02, 2025
+   </title>
+   <description>
+    AI-curated MLB highlights for games on Friday, May 02, 2025
+   </description>
+   <guid>
+    20250502
+   </guid>
+   <pubDate>
+    Sun, 04 May 2025 16:13:07
+   </pubDate>
+   <itunes:explicit>
+    false
+   </itunes:explicit>
+   <enclosure type="audio/mpeg" url="https://plai-ball.s3.amazonaws.com/audio/20250502-audio.mp3"/>
+  </item>
+  <item>
+   <itunes:episodeType>
+    full
+   </itunes:episodeType>
+   <title>
+    plAI ball! Thursday, May 01, 2025
+   </title>
+   <description>
+    AI-curated MLB highlights for games on Thursday, May 01, 2025
+   </description>
+   <guid>
+    20250501
+   </guid>
+   <pubDate>
+    Sun, 04 May 2025 16:09:01
+   </pubDate>
+   <itunes:explicit>
+    false
+   </itunes:explicit>
+   <enclosure type="audio/mpeg" url="https://plai-ball.s3.amazonaws.com/audio/20250501-audio.mp3"/>
+  </item>
   <!-- EXAMPLE EPISODE
     <item>
       <itunes:episodeType>full</itunes:episodeType>
