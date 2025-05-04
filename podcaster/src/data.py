@@ -29,12 +29,9 @@ def run(args):
             
         # Create filename from URL
         filename = f"{url.split('/')[-1]}-{suffix}.html"
-        filepath = os_helper.join(args.output_data_dir, filename)
         
         # Save HTML content
-        with open(filepath, 'w', encoding='utf-8') as f:
-            logger.info(f"Writing file {filepath}")
-            f.write(html)
+        os_helper.write_file(html, args.output_data_dir, filename)
 
     source_url = f"https://www.espn.com/mlb/scoreboard/_/date/{args.date}"
     logger.info(f"Fetching box scores from: {source_url}")
