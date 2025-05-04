@@ -17,6 +17,9 @@ podcasting app: https://www.plai-ball.com/rss.xml
 - Upload the podcast, transcript, and intermediate files to Amazon S3.
 - Update and publish the RSS feed.
 
+Right now I'm just running it by hand to get an understanding of costs, errors, etc.
+I need to set it up on a cron eventually.
+
 ## Code
 Source lives in the [podcaster/src](https://github.com/monsur/plAI-ball/tree/main/podcaster/src)
 directory. Each of the steps above is encapsulated in a different source file. I used
