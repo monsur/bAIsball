@@ -5,6 +5,10 @@ around with AI.
 
 [🎧 SUBSCRIBE](https://www.plai-ball.com/rss.xml)
 
+Clicking the "SUBSCRIBE" link above will take you to the podcast rss feed. If
+it doesn't subscribe you can try pasting the rss url into your favorite
+podcasting app: https://www.plai-ball.com/rss.xml
+
 ## Flow
 - Downloads and saves HTML from the previous day's boxscores.
 - Merges the boxscores into a single prompt file.
