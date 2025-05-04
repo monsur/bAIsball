@@ -2,11 +2,14 @@ import boto3
 import os
 from podcaster.src import args_helper
 from podcaster.src import logger_helper
+from podcaster.src import os_helper
 
 logger = logger_helper.get_logger(__name__)
 
 def run(args):
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3',
+        aws_access_key_id=os_helper.getenv("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os_helper.getenv("AWS_SECRET_ACCESS_KEY"))
 
     for root, dirs, files in os.walk(args.output_dir):
         for filename in files:
