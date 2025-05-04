@@ -1,8 +1,8 @@
-import requests
 import time
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from podcaster.src import args_helper
+from podcaster.src import http_helper
 from podcaster.src import logger_helper
 from podcaster.src import os_helper
 
@@ -25,7 +25,7 @@ def run(args):
         return boxscore_urls
     
     def save_data(url, suffix):
-        html = make_request(url)
+        html = http_helper.make_request(url)
             
         # Create filename from URL
         filename = f"{url.split('/')[-1]}-{suffix}.html"
@@ -36,22 +36,10 @@ def run(args):
             logger.info(f"Writing file {filepath}")
             f.write(html)
 
-    def make_request(url):
-        logger.info(f"Retrieving {url}")
-        try:
-            response = requests.get(url, headers={
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-            })
-            response.raise_for_status()
-            return response.text
-        except requests.RequestException as e:
-            logger.error(f"Error fetching {url}: {e}")
-            return None
-
     source_url = f"https://www.espn.com/mlb/scoreboard/_/date/{args.date}"
     logger.info(f"Fetching box scores from: {source_url}")
 
-    source_html = make_request(source_url)
+    source_html = http_helper.make_request(source_url)
         
     boxscore_urls = get_boxscore_urls(source_html, source_url)
     logger.info(f"Found {len(boxscore_urls)} games")
