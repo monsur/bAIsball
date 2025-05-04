@@ -26,3 +26,9 @@ Visit the [examples/](https://github.com/monsur/plAI-ball/tree/main/example)
 directory for examples of the transcript and podcast.
 
 And of course, that logo was generated using Gemini!
+
+## Disclaimer
+
+This is just a personal learning playground for myself. Its offered as-is, with
+no guarantees on reliability. This is not affiliated with ESPN, OpenAI, or
+Google.
