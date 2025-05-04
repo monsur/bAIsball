@@ -1,6 +1,7 @@
 import boto3
 import datetime
 import os
+from mutagen.mp3 import MP3
 from bs4 import BeautifulSoup, Comment
 from podcaster.src import args_helper
 from podcaster.src import logger_helper
@@ -45,6 +46,11 @@ def run(args):
         pubDate = rss_soup.new_tag("pubDate")
         pubDate.string = datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S %z")
         item.append(pubDate)
+        
+        duration = rss_soup.new_tag("itunes:duration")
+        audio = MP3(f"{args.output_dir}/{args.date}-audio.mp3")
+        duration.string = str(int(audio.info.length))
+        item.append(duration)
         
         explicit = rss_soup.new_tag("itunes:explicit")
         explicit.string = "false"
