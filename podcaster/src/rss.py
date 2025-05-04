@@ -53,7 +53,8 @@ def run(args):
 
         return item
     
-    rss_soup.find("rss").find("channel").append(get_item())
+    rss_soup.rss.channel.find("itunes:explicit").insert_after(get_item())
+    #rss_soup.find("rss").find("channel").insert(1, get_item())
     
     os_helper.write_file(rss_soup.prettify(), "docs/rss.xml")
 
