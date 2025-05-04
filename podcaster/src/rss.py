@@ -2,20 +2,18 @@ import boto3
 import datetime
 from bs4 import BeautifulSoup, Comment
 from podcaster.src import args_helper
+from podcaster.src import logger_helper
 from podcaster.src import os_helper
 
+logger = logger_helper.get_logger(__name__)
+
 def run(args):
+    max_items = 7
+
     client = boto3.client('s3',
         aws_access_key_id=os_helper.getenv("AWS_ACCESS_KEY_ID"),
         aws_secret_access_key=os_helper.getenv("AWS_SECRET_ACCESS_KEY"))
     
-    resource = boto3.resource('s3',
-        aws_access_key_id=os_helper.getenv("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=os_helper.getenv("AWS_SECRET_ACCESS_KEY"))
-#    my_bucket = resource.Bucket(args.s3_bucket)
-#    for my_bucket_object in my_bucket.objects.all():
-#        print(my_bucket_object)
-
     rss_text = os_helper.read_file("docs/rss.xml")
     if rss_text is None:
         raise Exception("rss.xml not found!")
@@ -51,20 +49,37 @@ def run(args):
         explicit.string = "false"
         item.append(explicit)
         
-        enclosure = rss_soup.new_tag("enclosure", type="audio/mpeg", url=f"https://plai-ball.s3.amazonaws.com/audio/{args.date}-audio.mp3")
+        enclosure = rss_soup.new_tag("enclosure", type="audio/mpeg", url=f"https://{args.s3_bucket}.s3.amazonaws.com/audio/{args.date}-audio.mp3")
         item.append(enclosure)
 
         return item
     
+    # Retrieve all the item sections
     items = rss_soup.rss.channel.find_all("item")
+    
+    # If the date's entry already exists, update the entry.
     exists = False
     for item in items:
         guid = item.find("guid").string.strip()
         if guid == args.date:
             item.replace_with(get_item())
             exists = True
+
+    # If this is a new podcast, upload the MP3 and insert a new entry.
     if not exists:
-        rss_soup.rss.channel.find("itunes:explicit").insert_after(get_item())            
+        rss_soup.rss.channel.find("itunes:explicit").insert_after(get_item())
+        source_path = os_helper.join(args.output_dir, f"{args.date}-audio.mp3")
+        s3_path = f"audio/{args.date}-audio.mp3"
+        logger.info("Uploading from %s to %s..." % (source_path, s3_path))
+        client.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs={"ACL": "public-read"})   
+
+    # Purge old entries
+    items = rss_soup.rss.channel.find_all("item")
+    if (len(items) > max_items):
+        item = items[-1].extract()
+        filename = f"audio/{item.guid.string.strip()}-audio.mp3"
+        logger.info(f"Deleting file {filename}")
+        client.delete_object(Bucket=args.s3_bucket, Key=filename)
 
     os_helper.write_file(rss_soup.prettify(), "docs/rss.xml")
 

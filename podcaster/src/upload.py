@@ -25,7 +25,7 @@ def run(args):
             if (source_path.endswith(".mp3")):
                 extra_args["ACL"] = "public-read"
 
-            logger.info("Uploading %s..." % s3_path)
+            logger.info("Uploading from %s to %s..." % (source_path, s3_path))
             s3.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs=extra_args)
 
 if __name__ == "__main__":
