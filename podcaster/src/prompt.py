@@ -15,7 +15,7 @@ def run(args):
         soup = BeautifulSoup(content, 'html.parser')
 
         # Remove script, style, link, and img tags
-        for tag in soup.find_all(['script', 'style', 'link', 'img']):
+        for tag in soup.find_all(['script', 'style', 'link', 'img', 'svg']):
             tag.decompose()
 
         # Remove HTML comments
@@ -50,6 +50,31 @@ def run(args):
         for tag in soup.find_all(True):  # True matches all tags
             if 'class' in tag.attrs:
                 del tag.attrs['class']
+            if 'data-react-helmet' in tag.attrs:
+                del tag.attrs['data-react-helmet']
+            if 'style' in tag.attrs:
+                del tag.attrs['style']
+            if 'lang' in tag.attrs:
+                del tag.attrs['lang']
+        
+        # Prune meta tags
+        for meta in soup.find_all('meta'):
+            if 'charset' in meta.attrs:
+                meta.decompose()
+            elif 'name' in meta.attrs and meta['name'] == 'viewport':
+                meta.decompose()
+            elif 'property' in meta.attrs and meta['property'] == 'fb:app_id':
+                meta.decompose()
+            elif 'property' in meta.attrs and meta['property'].startswith('og:'):
+                meta.decompose()
+            elif 'name' in meta.attrs and meta['name'].startswith('twitter:'):
+                meta.decompose()
+            elif 'name' in meta.attrs and meta['name'] == 'medium':
+                meta.decompose()
+            elif 'name' in meta.attrs and meta['name'] == 'title':
+                meta.decompose()
+            elif 'http-equiv' in meta.attrs:
+                meta.decompose()
 
         # Get the HTML content
         if args.prettyprint:
