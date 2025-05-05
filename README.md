@@ -11,7 +11,7 @@ podcasting app: https://www.plai-ball.com/rss.xml
 
 ## Flow
 - Downloads and saves HTML from the previous day's boxscores.
-- Merges the boxscores into a single prompt file.
+- Merges the boxscores into a single AI prompt.
 - Send the prompt to AI to generate the podcast transcript.
 - Use the AI TTS API to convert the transcript into an MP3.
 - Upload the podcast, transcript, and intermediate files to Amazon S3.
