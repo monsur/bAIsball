@@ -119,7 +119,7 @@
    </itunes:explicit>
    <enclosure type="audio/mpeg" url="https://plai-ball.s3.amazonaws.com/audio/20250501-audio.mp3"/>
   </item>
-  <!-- EXAMPLE EPISODE
+  <!-- EXAMPLE EPISODE From Apple's documentation
     <item>
       <itunes:episodeType>full</itunes:episodeType>
       <itunes:episode>4</itunes:episode>
