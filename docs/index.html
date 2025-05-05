@@ -112,7 +112,7 @@
         </div>
 
         <h2 id="listen">Listen</h2>
-        <p>Listen to the latest episode below.</p>
+        <p>Listen to the latest episode from <span id="lastUpdate"></span>.</p>
         <div id="audioContainer">
         </div>
 
@@ -126,7 +126,8 @@
             <li>Uploads all assets to Amazon S3 so I have a historical record of inputs, prompts, etc.</li>
         </ul>
 
-        <p>Currently this is a manual process while I understand costs and stability. Automation via cron job coming soon!
+        <p>Currently this is a manual process while I understand costs and stability. Automation via cron job coming
+            soon!
         </p>
 
         <h2 id="code">Code</h2>
@@ -143,6 +144,14 @@
         </footer>
     </div>
     <script>
+        function yyyymmddToDate(yyyymmdd) {
+            const year = parseInt(yyyymmdd.slice(0, 4));
+            const month = parseInt(yyyymmdd.slice(4, 6)) - 1; // Month is 0-indexed
+            const day = parseInt(yyyymmdd.slice(6, 8));
+
+            return new Date(year, month, day);
+        }
+
         window.onload = function () {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", "/rss.xml");
@@ -153,6 +162,9 @@
                     const item = xhr.responseXML.getElementsByTagName("item")[0];
                     const audio = item.getElementsByTagName("enclosure")[0].getAttribute("url");
                     const transcript = item.getElementsByTagName("podcast:transcript")[0].getAttribute("url");
+                    const guid = yyyymmddToDate(item.getElementsByTagName("guid")[0].textContent.trim());
+
+                    document.getElementById("lastUpdate").innerText = guid.toLocaleDateString();
 
                     const player = new Audio(audio);
                     player.controls = true;
