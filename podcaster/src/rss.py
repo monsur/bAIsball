@@ -90,7 +90,7 @@ def run(args):
         source_path = os_helper.join(args.output_dir, f"{args.date}-transcript.txt")
         s3_path = f"audio/{args.date}-transcript.txt"
         logger.info("Uploading from %s to %s..." % (source_path, s3_path))
-        client.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs={"ACL": "public-read"})   
+        client.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs={"ACL": "public-read", "ContentType": "text/plain; charset=UTF-8"})   
 
     # Purge old entries
     items = rss_soup.rss.channel.find_all("item")
