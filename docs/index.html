@@ -164,7 +164,7 @@
                     const transcript = item.getElementsByTagName("podcast:transcript")[0].getAttribute("url");
                     const guid = yyyymmddToDate(item.getElementsByTagName("guid")[0].textContent.trim());
 
-                    document.getElementById("lastUpdate").innerText = guid.toLocaleDateString();
+                    document.getElementById("lastUpdate").innerText = guid.toDateString();
 
                     const player = new Audio(audio);
                     player.controls = true;
