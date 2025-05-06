@@ -1,22 +1,14 @@
 # Work flow to create the plAI ball podcast.
 
 name: Create Podcast
+run-name: "Creating Podcast for ${{ date -d yesterday +%Y-%m-%d }}"
 
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Create-Podcast:
     runs-on: ubuntu-latest
+    name: Create Podcast
     steps:
-      - name: Get yesterday's date
-        id: yesterday_date
-        run: |
-          yesterday_date=$(date -d yesterday +%Y-%m-%d)
-          echo "::set-output name=yesterday_date::$yesterday_date"
-      - name: Set run-name
-        run: echo "::set-output name=run_name::Creating podcast for ${{ steps.yesterday_date.outputs.yesterday_date }}"
-        env:
-          run_name: ${{ steps.yesterday_date.outputs.yesterday_date }}
-
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
