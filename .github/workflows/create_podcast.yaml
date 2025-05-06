@@ -3,7 +3,10 @@
 name: Create Podcast
 run-name: "Creating Podcast"
 
-on: [push]
+on:
+  schedule:
+    - cron: "0 10 * * *"
+
 jobs:
   Create-Podcast:
     runs-on: ubuntu-latest
@@ -24,10 +27,15 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tool
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           python -m podcaster.src.main
 
-      - name: Commit report
+      - name: Publish rss.xml
         run: |
           git config --global user.name 'Monsur Hossain'
           git config --global user.email 'monsur@gmail.com'
