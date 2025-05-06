@@ -18,13 +18,11 @@ def run(args):
             voice="ash",
             input=content,
             instructions="""
-            Voice Affect: Energetic and animated; dynamic with variations in pitch and tone.
+Voice Affect: Energetic and animated; dynamic with variations in pitch and tone.
 
 Tone: Excited and enthusiastic, conveying an upbeat and thrilling atmosphere. 
 
-Pacing: Rapid delivery when describing the game or the key moments (e.g., "an overtime thriller," "pull off an unbelievable win") to convey the intensity and build excitement.
-
-Slightly slower during dramatic pauses to let key points sink in.
+Pacing: Rapid delivery when describing the game or the key moments (e.g., "an overtime thriller," "pull off an unbelievable win") to convey the intensity and build excitement. Slightly slower during dramatic pauses to let key points sink in.
 
 Emotion: Intensely focused, and excited. Giving off positive energy.
 
