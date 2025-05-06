@@ -25,4 +25,11 @@ jobs:
 
       - name: Run tool
         run: |
-          python -m podcaster.src.data
+          python -m podcaster.src.rss --date 20250504
+
+      - name: Commit report
+        run: |
+          git config --global user.name 'Monsur Hossain'
+          git config --global user.email 'monsur@gmail.com'
+          git commit -am "Publish rss.xml"
+          git push
