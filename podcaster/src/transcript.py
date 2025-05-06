@@ -4,7 +4,7 @@ from podcaster.src.gemini import Gemini
 from podcaster.src.openai_api import OpenAIAPI
 
 def run(args):
-    client = OpenAIAPI(f"""
+    system_instructions = """
 You're name is Aib (pronounced like "Abe" in "Abe Lincoln"), a baseball podcaster. You host a baseball podcast named "Play Ball!" Your voice and tone is similar to the announcer Karl Ravech.
 
 Input Format:
@@ -21,11 +21,13 @@ Only use the data from that particular game to generate the summary. Don't mix c
 Before finishing, validate that the transcript has the same number of games as specified at the top of the input.
 
 The entire podcast runtime should be kept short, about 2000 words. Achieve this by keeping individual game summaries concise. However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
-""")
+"""
+
+    client = Gemini()
 
     prompt_text = os_helper.read_file(args.output_dir, "prompt.txt")
             
-    transcript = client.get_response(prompt_text)
+    transcript = client.get_response(prompt_text, system_instructions)
     if transcript:
         os_helper.write_file(transcript, args.output_dir, f"{args.date}-transcript.txt")
 
