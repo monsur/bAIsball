@@ -1,5 +1,5 @@
 beautifulsoup4==4.12.2
-boto3==1.38.8
+boto3==1.38.9
 google-genai==1.13.0
 html-to-json==2.0.0
 lxml==5.4.0
