@@ -25,7 +25,7 @@ jobs:
 
       - name: Run tool
         run: |
-          python -m podcaster.src.rss --date 20250504
+          python -m podcaster.src.main
 
       - name: Commit report
         run: |
