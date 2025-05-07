@@ -20,7 +20,7 @@ Only use the data from that particular game to generate the summary. Don't mix c
 
 Before finishing, validate that the transcript has the same number of games as specified at the top of the input.
 
-The entire podcast runtime should be kept short, about 1000 words. Achieve this by keeping individual game summaries concise. However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
+The entire transcript should be no longer than 1000 words. Achieve this by keeping individual game summaries concise. However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
 """
 
     client = Gemini()
