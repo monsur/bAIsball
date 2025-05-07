@@ -15,11 +15,11 @@ def run(args):
         for filename in files:
             # construct the full local path
             source_path = os.path.join(root, filename)
-            
+
             # construct the full upload paths
             relative_path = os.path.relpath(source_path, args.output_dir)
             s3_path = os.path.join("archive", args.date, relative_path)
-            
+
             logger.info("Uploading from %s to %s..." % (source_path, s3_path))
             s3.upload_file(source_path, args.s3_bucket, s3_path)
 

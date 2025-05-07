@@ -11,7 +11,7 @@ def run(args):
     def process_boxscore_file(filename):
         logger.info(f"Processing {filename}")
         content = os_helper.read_file(args.output_data_dir, filename)
-        
+
         soup = BeautifulSoup(content, 'html.parser')
 
         # Remove script, style, link, and img tags
@@ -56,7 +56,7 @@ def run(args):
                 del tag.attrs['style']
             if 'lang' in tag.attrs:
                 del tag.attrs['lang']
-        
+
         # Prune meta tags
         for meta in soup.find_all('meta'):
             if 'charset' in meta.attrs:
@@ -84,9 +84,9 @@ def run(args):
             # Remove empty lines
             lines = [line for line in content.split('\n') if line.strip()]
             content = '\n'.join(lines)
-            
+
         return content
-    
+
     def process_recap_file(filename):
         logger.info(f"Processing {filename}")
         content = os_helper.read_file(args.output_data_dir, filename)
@@ -95,16 +95,16 @@ def run(args):
 
     def process_file(filename):
         content = process_boxscore_file(filename)
-        
+
         try:
             content += "<recap>" + process_recap_file(filename.replace("boxscore", "recap")) + "</recap>"
         except Exception as e:
             logger.info(f"No recap for {filename}")
-        
+
         os_helper.write_file(content, args.output_data_dir, filename.replace("boxscore", "prompt"))
 
         return content
- 
+
     files = [f for f in os.listdir(args.output_data_dir) if f.endswith('boxscore.html')]
 
     if not files:

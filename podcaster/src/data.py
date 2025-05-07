@@ -21,15 +21,15 @@ def run(args):
                 # Convert relative URLs to absolute URLs
                 absolute_url = urljoin(source_url, href)
                 boxscore_urls.append(absolute_url)
-            
+
         return boxscore_urls
-    
+
     def save_data(url, suffix):
         html = http_helper.make_request(url)
-            
+
         # Create filename from URL
         filename = f"{url.split('/')[-1]}-{suffix}.html"
-        
+
         # Save HTML content
         os_helper.write_file(html, args.output_data_dir, filename)
 
@@ -37,15 +37,15 @@ def run(args):
     logger.info(f"Fetching box scores from: {source_url}")
 
     source_html = http_helper.make_request(source_url)
-        
+
     boxscore_urls = get_boxscore_urls(source_html, source_url)
     logger.info(f"Found {len(boxscore_urls)} games")
-        
+
     for boxscore_url in boxscore_urls:
         save_data(boxscore_url, "boxscore")
         time.sleep(args.delay)
         save_data(boxscore_url.replace("boxscore", "recap"), "recap")
         time.sleep(args.delay)
-        
+
 if __name__ == "__main__":
     run(args_helper.get_args())

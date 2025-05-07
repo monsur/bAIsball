@@ -26,7 +26,7 @@ The entire podcast runtime should be kept short, about 2000 words. Achieve this 
     client = Gemini()
 
     prompt_text = os_helper.read_file(args.output_dir, "prompt.txt")
-            
+
     transcript = client.get_response(prompt_text, system_instructions)
     if transcript:
         os_helper.write_file(transcript, args.output_dir, f"{args.date}-transcript.txt")
