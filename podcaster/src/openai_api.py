@@ -2,9 +2,9 @@ from openai import OpenAI
 from podcaster.src import os_helper
 
 class OpenAIAPI:
-   def __init__(self):
+   def __init__(self, model):
       self.client = OpenAI(api_key=os_helper.getenv('OPENAI_API_KEY'))
-      self.model = "gpt-4.1-mini"
+      self.model = model
       self.temperature = 0.2
 
    def get_response(self, prompt, system_instructions):

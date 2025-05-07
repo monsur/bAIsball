@@ -1,7 +1,28 @@
 from podcaster.src import args_helper
+from podcaster.src import logger_helper
 from podcaster.src import os_helper
 from podcaster.src.gemini import Gemini
 from podcaster.src.openai_api import OpenAIAPI
+
+logger = logger_helper.get_logger(__name__)
+
+def get_client(input_model):
+    openai_models = ["gpt-4.1-mini"]
+    gemini_models = ["gemini-2.5-pro-exp-03-25"]
+
+    if input_model == "OpenAI":
+        input_model = openai_models[0]
+    elif input_model == "Gemini":
+        input_model = gemini_models[0]
+
+    if input_model in openai_models:
+        logger.info(f"Using OpenAI model: {input_model}")
+        return OpenAIAPI(input_model)
+    elif input_model in gemini_models:
+        logger.info(f"Using Gemini model: {input_model}")
+        return Gemini(input_model)
+    else:
+        raise ValueError(f"Model {input_model} not supported. Supported models are: {openai_models + gemini_models}")
 
 def run(args):
     system_instructions = """
@@ -25,7 +46,7 @@ Only use the data from that particular game to generate the summary. Don't mix c
 Before finishing, validate that the transcript has the same number of games as specified at the top of the input.
 """
 
-    client = OpenAIAPI()
+    client = get_client(args.model)
 
     prompt_text = os_helper.read_file(args.output_dir, "prompt.txt")
 
