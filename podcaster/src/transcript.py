@@ -7,6 +7,7 @@ from podcaster.src.openai_api import OpenAIAPI
 logger = logger_helper.get_logger(__name__)
 
 def get_client(input_model):
+    # Supported models. The first model in the list is the default.
     openai_models = ["gpt-4.1-mini"]
     gemini_models = ["gemini-2.5-pro-exp-03-25"]
 
