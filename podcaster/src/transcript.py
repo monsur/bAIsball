@@ -23,7 +23,7 @@ Before finishing, validate that the transcript has the same number of games as s
 The entire transcript should be no longer than 1000 words. Achieve this by keeping individual game summaries concise. However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
 """
 
-    client = Gemini()
+    client = OpenAIAPI()
 
     prompt_text = os_helper.read_file(args.output_dir, "prompt.txt")
 
