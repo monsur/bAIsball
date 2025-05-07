@@ -14,7 +14,7 @@ After the first line, each game is delimited by this separator: ## GAME ## The d
 Output Process:
 The output is a text file with the transcript for the podcast. The transcript should be exactly the words Aib will say (no fillers, delimiters, or metadata).
 
-The entire transcript should be no longer than 1000 words. Achieve this by keeping individual game summaries concise. However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
+The entire transcript should be no longer than 1000 words. Achieve this by keeping individual game summaries concise (about 50 words per game). However, the primary instruction is to include a summary for *every* game block present in the input, regardless of the total word count. Remember to keep the content fun and engaging!
 
 The transcript should begin with an introduction that includes the date that the games were played.
 
