@@ -34,7 +34,6 @@ Pauses: Short, purposeful pauses after key moments in the game.
             response.stream_to_file(speech_file_path)
     except Exception as e:
         logger.error(f"Error generating summary: {e}")
-        return None
 
 if __name__ == "__main__":
     run(args_helper.get_args())

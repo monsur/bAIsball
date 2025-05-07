@@ -1,8 +1,8 @@
-import boto3
 import datetime
 import os
+import boto3
 from mutagen.mp3 import MP3
-from bs4 import BeautifulSoup, Comment
+from bs4 import BeautifulSoup
 from podcaster.src import args_helper
 from podcaster.src import logger_helper
 from podcaster.src import os_helper
@@ -30,8 +30,8 @@ def run(args):
         item.append(episodeType)
 
         title = rss_soup.new_tag("title")
-        dateObj = datetime.datetime.strptime(args.date, f"%Y%m%d").date()
-        dateStr = dateObj.strftime(f"%A, %B %d, %Y")
+        dateObj = datetime.datetime.strptime(args.date, "%Y%m%d").date()
+        dateStr = dateObj.strftime("%A, %B %d, %Y")
         title.string = f"plAI ball! {dateStr}"
         item.append(title)
 
@@ -85,16 +85,16 @@ def run(args):
         rss_soup.rss.channel.find("itunes:explicit").insert_after(get_item())
         source_path = os_helper.join(args.output_dir, f"{args.date}-audio.mp3")
         s3_path = f"audio/{args.date}-audio.mp3"
-        logger.info("Uploading from %s to %s..." % (source_path, s3_path))
+        logger.info(f"Uploading from {source_path} to {s3_path}...")
         client.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs={"ACL": "public-read"})
         source_path = os_helper.join(args.output_dir, f"{args.date}-transcript.txt")
         s3_path = f"audio/{args.date}-transcript.txt"
-        logger.info("Uploading from %s to %s..." % (source_path, s3_path))
+        logger.info(f"Uploading from {source_path} to {s3_path}...")
         client.upload_file(source_path, args.s3_bucket, s3_path, ExtraArgs={"ACL": "public-read", "ContentType": "text/plain; charset=UTF-8"})
 
     # Purge old entries
     items = rss_soup.rss.channel.find_all("item")
-    if (len(items) > max_items):
+    if len(items) > max_items:
         item = items[-1].extract()
         filename = f"audio/{item.guid.string.strip()}-audio.mp3"
         logger.info(f"Deleting file {filename}")

@@ -1,5 +1,5 @@
-import boto3
 import os
+import boto3
 from podcaster.src import args_helper
 from podcaster.src import logger_helper
 from podcaster.src import os_helper
@@ -20,7 +20,7 @@ def run(args):
             relative_path = os.path.relpath(source_path, args.output_dir)
             s3_path = os.path.join("archive", args.date, relative_path)
 
-            logger.info("Uploading from %s to %s..." % (source_path, s3_path))
+            logger.info(f"Uploading from {source_path} to {s3_path}...")
             s3.upload_file(source_path, args.s3_bucket, s3_path)
 
 if __name__ == "__main__":

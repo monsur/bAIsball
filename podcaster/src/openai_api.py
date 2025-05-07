@@ -7,18 +7,18 @@ class OpenAIAPI:
       self.model = "gpt-4.1-mini"
       self.temperature = 0.2
 
-   def get_response(self, input, system_instructions):
+   def get_response(self, prompt, system_instructions):
       try:
          response = self.client.responses.create(
             model=self.model,
             input=[
                {
-                     "role": "developer",
-                     "content": system_instructions
+                  "role": "developer",
+                  "content": system_instructions
                },
                {
-                     "role": "user",
-                     "content": input
+                  "role": "user",
+                  "content": prompt
                }
             ], temperature=self.temperature)
          return response.output_text

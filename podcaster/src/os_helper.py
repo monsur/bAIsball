@@ -24,7 +24,7 @@ def write_file(content, *args):
 
 def make_dir(path, clean=False):
     os.makedirs(path, exist_ok=True)
-    if (clean):
+    if clean:
         for item in os.listdir(path):
             item_path = os.path.join(path, item)
             try:

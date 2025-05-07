@@ -1,6 +1,6 @@
 import time
-from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from bs4 import BeautifulSoup
 from podcaster.src import args_helper
 from podcaster.src import http_helper
 from podcaster.src import logger_helper

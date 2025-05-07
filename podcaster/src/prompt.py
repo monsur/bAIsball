@@ -113,7 +113,7 @@ def run(args):
 
     content = f"There are {len(files)} games in this prompt."
     for filename in files:
-        content += f"\n\n## GAME ##\n\n"
+        content += "\n\n## GAME ##\n\n"
         content += process_file(filename)
     os_helper.write_file(content, args.output_dir, "prompt.txt")
 
