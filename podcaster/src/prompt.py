@@ -11,10 +11,9 @@ def run(args):
     def process_boxscore_file(filename):
         logger.info(f"Processing {filename}")
         content = os_helper.read_file(args.output_data_dir, filename)
-
         soup = BeautifulSoup(content, 'html.parser')
 
-        # Remove script, style, link, and img tags
+        # Remove unwanted tags in one go
         for tag in soup.find_all(['script', 'style', 'link', 'img', 'svg']):
             tag.decompose()
 
@@ -22,69 +21,43 @@ def run(args):
         for comment in soup.find_all(string=lambda text: isinstance(text, Comment)):
             comment.extract()
 
-        # Remove HeaderScoreboardWrapper div
-        for div in soup.find_all('div', class_='HeaderScoreboardWrapper'):
-            div.decompose()
+        # Remove specific containers using CSS selectors
+        selectors = [
+            'div.HeaderScoreboardWrapper',
+            'div.PageLayout.page-container.cf.page-footer-container',
+            'div#fittOverlayContainer',
+            'div#fittBGContainer',
+            'div#lightboxContainer',
+            'header.db.Site__Header__Wrapper.sticky'
+        ]
+        for sel in selectors:
+            for tag in soup.select(sel):
+                tag.decompose()
 
-        # Remove PageLayout page-container cf page-footer-container div
-        for div in soup.find_all('div', class_='PageLayout page-container cf page-footer-container'):
-            div.decompose()
-
-        # Remove fittOverlayContainer div
-        for div in soup.find_all('div', id='fittOverlayContainer'):
-            div.decompose()
-
-        # Remove fittBGContainer div
-        for div in soup.find_all('div', id='fittBGContainer'):
-            div.decompose()
-
-        # Remove lightboxContainer div
-        for div in soup.find_all('div', id='lightboxContainer'):
-            div.decompose()
-
-        # Remove Site Header Wrapper div
-        for div in soup.find_all('header', class_='db Site__Header__Wrapper sticky'):
-            div.decompose()
-
-        # Remove all classes from all tags
-        for tag in soup.find_all(True):  # True matches all tags
-            if 'class' in tag.attrs:
-                del tag.attrs['class']
-            if 'data-react-helmet' in tag.attrs:
-                del tag.attrs['data-react-helmet']
-            if 'style' in tag.attrs:
-                del tag.attrs['style']
-            if 'lang' in tag.attrs:
-                del tag.attrs['lang']
+        # Remove unwanted attributes from all tags
+        attrs_to_remove = ['class', 'data-react-helmet', 'style', 'lang']
+        for tag in soup.find_all(True):
+            for attr in attrs_to_remove:
+                tag.attrs.pop(attr, None)
 
         # Prune meta tags
         for meta in soup.find_all('meta'):
-            if 'charset' in meta.attrs:
-                meta.decompose()
-            elif 'name' in meta.attrs and meta['name'] == 'viewport':
-                meta.decompose()
-            elif 'property' in meta.attrs and meta['property'] == 'fb:app_id':
-                meta.decompose()
-            elif 'property' in meta.attrs and meta['property'].startswith('og:'):
-                meta.decompose()
-            elif 'name' in meta.attrs and meta['name'].startswith('twitter:'):
-                meta.decompose()
-            elif 'name' in meta.attrs and meta['name'] == 'medium':
-                meta.decompose()
-            elif 'name' in meta.attrs and meta['name'] == 'title':
-                meta.decompose()
-            elif 'http-equiv' in meta.attrs:
+            if (
+                'charset' in meta.attrs or
+                meta.get('name') in ['viewport', 'medium', 'title'] or
+                (meta.get('name') or '').startswith('twitter:') or
+                meta.get('property') == 'fb:app_id' or
+                (meta.get('property') or '').startswith('og:') or
+                'http-equiv' in meta.attrs
+            ):
                 meta.decompose()
 
+        # Remove certain sections by header text
         for section in soup.find_all("section"):
             header = section.find("header")
             if header:
                 h3 = header.find("h3")
-                if h3 and "MLB News" in h3.text:
-                    section.decompose()
-                elif h3 and "Videos" in h3.text:
-                    section.decompose()
-                elif h3 and "Game Information" in h3.text:
+                if h3 and any(x in h3.text for x in ["MLB News", "Videos", "Game Information"]):
                     section.decompose()
 
         # Get the HTML content
