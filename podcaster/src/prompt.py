@@ -76,6 +76,17 @@ def run(args):
             elif 'http-equiv' in meta.attrs:
                 meta.decompose()
 
+        for section in soup.find_all("section"):
+            header = section.find("header")
+            if header:
+                h3 = header.find("h3")
+                if h3 and "MLB News" in h3.text:
+                    section.decompose()
+                elif h3 and "Videos" in h3.text:
+                    section.decompose()
+                elif h3 and "Game Information" in h3.text:
+                    section.decompose()
+
         # Get the HTML content
         if args.prettyprint:
             content = soup.prettify()
